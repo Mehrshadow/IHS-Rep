@@ -102,6 +102,8 @@ public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickLis
                                     Database.Node.delete("iD=" + ioNodes[i].iD);
                                     Database.Switch.delete("nodeID=" + ioNodes[i].iD);
 
+                                    refreshNodeList();
+
                                     grdListAdapter.notifyDataSetChanged();
                                     ActivitySections.grdListAdapter.notifyDataSetChanged();
                                 } catch (Exception e) {

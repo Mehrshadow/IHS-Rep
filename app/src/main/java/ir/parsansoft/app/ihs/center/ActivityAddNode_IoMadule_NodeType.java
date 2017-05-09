@@ -105,12 +105,8 @@ public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
         }
 
         insertFakeNodeToDb(availablePorts);
+refreshNode();
 
-        grdListAdapter = new AdapterListViewNode(G.currentActivity, devices, false);
-        mAdd_node_nodeType.lstNode.setAdapter(grdListAdapter);
-        switches = Database.Switch.select("nodeID = " + deviceID);
-        adapterNodeSwitches = new AdapterFakeNodeSwitches(this, switches, spinnerPorts);
-        mAdd_node_nodeType.lstNodeSwitches.setAdapter(adapterNodeSwitches);
 
         mAdd_node_nodeType.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,16 +129,17 @@ public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
                 fw3.putExtra("DEVICE_NODE_ID", deviceID);
                 fw3.putExtra("IO_NODE_ID", ioModuleID);
                 fw3.putExtra("Delete_Last_Node", true);
-                G.currentActivity.startActivity(fw3);
                 Animation.doAnimation(Animation.Animation_Types.FADE_SLIDE_LEFTRIGHT_LEFT);
 
                 G.nodeCommunication.allNodes.get(deviceID).distroyNode();
                 G.nodeCommunication.allNodes.remove(deviceID);
+
+                devices = new Database.Node.Struct[0];
+
                 Database.Node.delete(deviceID);
                 Database.Switch.delete("nodeID=" + deviceID);
 
-                adapterNodeSwitches.notifyDataSetChanged();
-                grdListAdapter.notifyDataSetChanged();
+                refreshNode();
 
                 NetMessage netMessage = new NetMessage();
                 netMessage.data = newNode.getNodeDataJson();
@@ -153,6 +150,8 @@ public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
                 G.mobileCommunication.sendMessage(netMessage);
                 G.server.sendMessage(netMessage);
 
+
+                G.currentActivity.startActivity(fw3);
                 finish();
 
             }
@@ -167,6 +166,7 @@ public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
                 G.nodeCommunication.allNodes.remove(deviceID);
                 Database.Node.delete(deviceID);
                 Database.Switch.delete("nodeID=" + deviceID);
+
                 adapterNodeSwitches.notifyDataSetChanged();
                 grdListAdapter.notifyDataSetChanged();
 
@@ -183,6 +183,14 @@ public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
             }
         });
         translateForm();
+    }
+
+    private void refreshNode() {
+        grdListAdapter = new AdapterListViewNode(G.currentActivity, devices, false);
+        mAdd_node_nodeType.lstNode.setAdapter(grdListAdapter);
+        switches = Database.Switch.select("nodeID = " + deviceID);
+        adapterNodeSwitches = new AdapterFakeNodeSwitches(this, switches, spinnerPorts);
+        mAdd_node_nodeType.lstNodeSwitches.setAdapter(adapterNodeSwitches);
     }
 
     @Override

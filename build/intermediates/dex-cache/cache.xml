@@ -3,21 +3,21 @@
 
     <item
         is-multidex="false"
-        jar="C:\Users\FCC\Desktop\IHS Repo\IHS\app\libs\maskededittext.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="2f4240378fecb18b004c6406ff3131de148852c5">
-        <dex dex="C:\Users\FCC\Desktop\IHS Repo\IHS\app\build\intermediates\pre-dexed\debug\maskededittext_f17cedc1ca8700bd5944c7ab12123068e161565d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\FCC\Desktop\IHS Repo\IHS\app\libs\zxing-1.3.jar"
+        jar="C:\Users\FCC\Desktop\IHS Rep\app\libs\zxing-1.3.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="c9d8bef9780c5e503cf0758a50ac812bd368a4e7">
-        <dex dex="C:\Users\FCC\Desktop\IHS Repo\IHS\app\build\intermediates\pre-dexed\debug\zxing-1.3_822a1f9a1938b536d43b3e44c7b3c212923157ed.jar" />
+        <dex dex="C:\Users\FCC\Desktop\IHS Rep\app\build\intermediates\pre-dexed\debug\zxing-1.3_b6cdc43e3c295a97733aa7e218d7c351bcd48f80.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\FCC\Desktop\IHS Rep\app\libs\maskededittext.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="2f4240378fecb18b004c6406ff3131de148852c5">
+        <dex dex="C:\Users\FCC\Desktop\IHS Rep\app\build\intermediates\pre-dexed\debug\maskededittext_c0bbca3bf64283b01ee5bf87c1bfb372fa64569e.jar" />
     </item>
 
 </items>

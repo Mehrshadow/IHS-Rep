@@ -1435,8 +1435,9 @@ public class AllNodes {
                     if (!isBusy)
                         if (myNode.parentNodeId != 0)
                             switchKey(0, 1, null, LogOperator.OPERAOR, G.currentUser.iD);
-                        else
-                            switchKey(2, 1, null, LogOperator.OPERAOR, G.currentUser.iD);
+                        else {
+                            switchKey(0, 1, null, LogOperator.OPERAOR, G.currentUser.iD);
+                        }
                 }
 
             });
@@ -1448,7 +1449,7 @@ public class AllNodes {
                         if (myNode.parentNodeId != 0)
                             switchKey(2, 1, null, LogOperator.OPERAOR, G.currentUser.iD);
                         else
-                            switchKey(1, 2, null, LogOperator.OPERAOR, G.currentUser.iD);
+                            switchKey(0, 2, null, LogOperator.OPERAOR, G.currentUser.iD);
                 }
             });
 
@@ -1563,7 +1564,7 @@ public class AllNodes {
                     int index = result.indexOf("*3", 0) + 5;
                     previousValues[0] = switches[0].value;
                     String state = result.substring(index, index + 7);
-                    if (state.equalsIgnoreCase("CT_CLOSE"))
+                    if (state.equalsIgnoreCase("CT_CLOS"))// clos 2roste!!!
                         switches[0].value = 0;
                     else if (state.equalsIgnoreCase("CT_OPEN"))
                         switches[0].value = 1;
@@ -3090,7 +3091,7 @@ public class AllNodes {
                 newNode.status = 1;
                 newNode.parentNodeId = parentNodeId;
                 newNode.iD = (int) Database.Node.insert(newNode);
-                for (int i = 0; i < 5; i++) { // 0 = high, 1 = medium, 2 = low
+                for (int i = 0; i < 7; i++) { // 0 = low, 1 = medium, 2 = height, 4=, damaye mohit, 5= set point, 6= power, 7 = hot&cold
                     sw = new Database.Switch.Struct();
                     sw.code = "" + i;
                     sw.nodeID = newNode.iD;

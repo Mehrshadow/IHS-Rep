@@ -696,6 +696,8 @@
         <item>120603|دور تند</item>
         <item>120604|دمای فعلی</item>
         <item>120605|دمای دلخواه</item>
+        <item>120606|پاور</item>
+        <item>120607|نوع دما</item>
 
     </string-array>
     <string-array name="translation_En">
