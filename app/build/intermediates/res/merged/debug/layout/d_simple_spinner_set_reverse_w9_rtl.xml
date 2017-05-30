@@ -5,7 +5,7 @@
     android:background="@drawable/lay_popup_bg"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ActivityMain" >
+    tools:context=".ActivityMain">
 
     <LinearLayout
         android:id="@+id/layOptions"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txtTitle"
@@ -34,79 +34,79 @@
 
 
         <TextView
-                android:id="@+id/txtBody"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="The main text of dialog box goes here :"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
-                android:textStyle="normal|bold"
-                android:typeface="monospace" />
+            android:id="@+id/txtBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="The main text of dialog box goes here :"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:textStyle="normal|bold"
+            android:typeface="monospace" />
 
         <LinearLayout
-                android:id="@+id/layParameters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
+            android:id="@+id/layParameters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                    android:id="@+id/layMainReverse"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                android:id="@+id/layMainReverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <CheckBox
-                        android:id="@+id/chkReverse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:button="@null"
-                        android:drawableRight="@drawable/lay_btn_checkbox_rtl"
-                        android:gravity="right"
-                        android:paddingLeft="10dp"
-                        android:text="Reverse to previous state"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:typeface="monospace" />
+                    android:id="@+id/chkReverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:button="@null"
+                    android:drawableRight="@drawable/lay_btn_checkbox_rtl"
+                    android:gravity="right"
+                    android:paddingLeft="10dp"
+                    android:text="Reverse to previous state"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:typeface="monospace" />
 
                 <LinearLayout
-                        android:id="@+id/layReverse"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center" >
+                    android:id="@+id/layReverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
 
                     <Spinner
-                            android:id="@+id/spnTimeUnit"
-                            style="@style/spinner_theme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_weight="1"
-                            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+                        android:id="@+id/spnTimeUnit"
+                        style="@style/spinner_theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="1"
+                        tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
                     <EditText
-                            android:id="@+id/edtReverseTime"
-                            style="@style/edittext_theme"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:ems="10"
-                            android:inputType="number"
-                            android:paddingLeft="5dp" />
+                        android:id="@+id/edtReverseTime"
+                        style="@style/edittext_theme"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:paddingLeft="5dp" />
 
                     <TextView
-                            android:id="@+id/txtReverseTime"
-                            style="@style/textview_before_editbox_theme"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="12dp"
-                            android:text="Reverse time :"
-                            android:textSize="15sp" />
+                        android:id="@+id/txtReverseTime"
+                        style="@style/textview_before_editbox_theme"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="12dp"
+                        android:text="Reverse time :"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -123,7 +123,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
-        android:gravity="center" >
+        android:gravity="center">
 
         <Button
             android:id="@+id/btnNegative"

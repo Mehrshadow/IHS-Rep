@@ -31,6 +31,8 @@ import ir.parsansoft.app.ihs.center.ModuleDownloader.OnDownloadCompleteListener;
 import ir.parsansoft.app.ihs.center.ModuleDownloader.OnProgressDownloadListener;
 import ir.parsansoft.app.ihs.center.ModuleWebservice.WebServiceListener;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 
 public class ActivitySettingUpdate extends ActivitySetting {
 
@@ -131,6 +133,9 @@ public class ActivitySettingUpdate extends ActivitySetting {
                         }
                     });
                 } catch (Exception e) {
+
+
+
                     G.HANDLER.post(new Runnable() {
 
                         @Override
@@ -140,6 +145,8 @@ public class ActivitySettingUpdate extends ActivitySetting {
                         }
                     });
                     G.printStackTrace(e);
+
+                    sendCrashLog(e, "ایراد در پردازش اطلاعات پس از دریافت از وب سرویس آپ دیت", Thread.currentThread().getStackTrace()[2]);
                 }
             }
         });
@@ -179,6 +186,7 @@ public class ActivitySettingUpdate extends ActivitySetting {
                         }
                     });
                 } catch (Exception e) {
+
                     G.HANDLER.post(new Runnable() {
                         @Override
                         public void run() {
@@ -186,6 +194,8 @@ public class ActivitySettingUpdate extends ActivitySetting {
                         }
                     });
                     G.printStackTrace(e);
+
+                    sendCrashLog(e, "ایراد در پردازش اطلاعات دریافتی از وب سرویس تاریخ انقضا", Thread.currentThread().getStackTrace()[2]);
                 }
             }
         });
@@ -219,23 +229,13 @@ public class ActivitySettingUpdate extends ActivitySetting {
                     installApplication(filePath);
                     /******************** Jahanbin **********************/
 
-//                    JSONObject json = new JSONObject();
-//                    json.put("ACTION", "Update");
-//                    json.put("PATH", filePath);
-//                    Intent intent = new Intent();
-//                    intent.setComponent(new ComponentName("ir.parsansoft.launcher", "ir.parsansoft.launcher.ActivityBundle"));
-//                    intent.putExtra("EVENT", json.toString());
-//                    startActivity(intent);
-
                     System.exit(0);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-//                catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
 
+                    sendCrashLog(e, "نصب ورژن جدید اپلیکیشن", Thread.currentThread().getStackTrace()[2]);
+                }
             }
         });
         md.cancelListener(new OnDownloadCanceledListener() {
@@ -358,6 +358,8 @@ public class ActivitySettingUpdate extends ActivitySetting {
 
             } catch (Exception e) {
                 G.log("Error: " + e.getMessage());
+
+                sendCrashLog(e, "برقرار نشدن ارتباط با سرور برای دانلود", Thread.currentThread().getStackTrace()[2]);
             }
 
             return null;

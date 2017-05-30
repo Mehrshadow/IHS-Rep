@@ -31,16 +31,13 @@ public class AdapterListViewScenario extends BaseAdapter {
     Context context;
     Struct[] scenarios;
     ScenarioListItemClick slic;
+    private boolean isDelayed;
 
 
     public AdapterListViewScenario(Context context, Struct[] scenarios) {
         //super(context, R.layout.l_node_simple_key, nodes);
         this.context = context;
         this.scenarios = scenarios;
-    }
-
-    public interface ScenarioListItemClick {
-        public void onScenarioListItemClick(int scenarioID, int position);
     }
 
     public void setOnScenarioListItemClick(ScenarioListItemClick slic) {
@@ -126,19 +123,36 @@ public class AdapterListViewScenario extends BaseAdapter {
                 public void onCheckedChanged(CompoundButton arg0, boolean newState) {
                     if (newState) {
                         if (checkCanEnable(position, lo)) {
-                            G.log("Reverse Activated Scenario row :" + position + " - ID =" + scenarios[position].iD + " -  Name : " + scenarios[position].name);
-                            scenarios[position].active = true;
-                            Database.Scenario.edit(scenarios[position]);
-                            G.scenarioBP.resetTimeBase();
-                            //  Send message to server and local Mobiles
-                            NetMessage netMessage = new NetMessage();
-                            netMessage.data = scenarios[position].getScenarioStatusJSON(false);
-                            netMessage.action = NetMessage.Update;
-                            netMessage.type = NetMessage.ScenarioStatus;
-                            netMessage.typeName = NetMessageType.ScenarioStatus;
-                            netMessage.messageID = netMessage.save();
-                            G.mobileCommunication.sendMessage(netMessage);
-                            G.server.sendMessage(netMessage);
+                            // inja bayad az karbar beporsim k aya mikhad scenario ba delay anjam beshe ya foran
+                            DialogClass dlg = new DialogClass(G.currentActivity);
+                            dlg.showDelayTime(scenarios[position]);
+                            dlg.setOnDelayListener(new DialogClass.DelayListener() {
+                                @Override
+                                public void okClick(boolean[] isDelayed, int timer) {
+                                    if (isDelayed[0]) {
+
+                                        scenarios[position].delayedTime = timer;
+
+                                        G.log("Reverse Activated Scenario row :" + position + " - ID =" + scenarios[position].iD + " -  Name : " + scenarios[position].name);
+                                        scenarios[position].active = true;
+                                        Database.Scenario.edit(scenarios[position]);
+
+                                        // scenario baraye 1 bar faghat trigger mishavad
+                                        // time be daghighe daryaft shode ast
+                                        G.alarmScenario.setOnetimeTimer(scenarios[position].iD, "delay", timer * 60 * 1000);
+
+                                        //  Send message to server and local Mobiles
+                                        NetMessage netMessage = new NetMessage();
+                                        netMessage.data = scenarios[position].getScenarioStatusJSON(false);
+                                        netMessage.action = NetMessage.Update;
+                                        netMessage.type = NetMessage.ScenarioStatus;
+                                        netMessage.typeName = NetMessageType.ScenarioStatus;
+                                        netMessage.messageID = netMessage.save();
+                                        G.mobileCommunication.sendMessage(netMessage);
+                                        G.server.sendMessage(netMessage);
+                                    }
+                                }
+                            });
                         } else {
                             G.log("Should has at least one active precondition and one active result");
                             lo.swhEnabled.setChecked(false);
@@ -202,18 +216,15 @@ public class AdapterListViewScenario extends BaseAdapter {
         return len;
     }
 
-
     @Override
     public Object getItem(int id) {
         return scenarios[id];
     }
 
-
     @Override
     public long getItemId(int id) {
         return scenarios[id].iD;
     }
-
 
     private boolean checkCanEnable(int position, CO_l_list_scemario lo) {
         boolean hasActivePre, hasActiveResult;
@@ -228,5 +239,9 @@ public class AdapterListViewScenario extends BaseAdapter {
     public void updateList(Struct[] scenarios) {
         this.scenarios = scenarios;
         notifyDataSetChanged();
+    }
+
+    public interface ScenarioListItemClick {
+        public void onScenarioListItemClick(int scenarioID, int position);
     }
 }

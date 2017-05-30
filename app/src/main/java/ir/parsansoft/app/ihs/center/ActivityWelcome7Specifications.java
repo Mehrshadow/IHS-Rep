@@ -21,6 +21,8 @@ import ir.parsansoft.app.ihs.center.ModuleWebservice.WebServiceListener;
 import ir.parsansoft.app.ihs.center.adapters.AdapterTelCodeSpinner;
 import ir.parsansoft.app.ihs.center.adapters.AdapterUserListView;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class ActivityWelcome7Specifications extends ActivityWizard {
 
 
@@ -214,6 +216,8 @@ public class ActivityWelcome7Specifications extends ActivityWizard {
                         }
                         catch (Exception e) {
                             G.printStackTrace(e);
+
+                            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                         }
                         Database.Setting.edit(G.setting);
                         if (G.serverCommunication == null)
@@ -245,6 +249,7 @@ public class ActivityWelcome7Specifications extends ActivityWizard {
                                 }
                                 catch (Exception e) {
                                     G.printStackTrace(e);
+                                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                                 }
                             }
                         });
@@ -253,6 +258,7 @@ public class ActivityWelcome7Specifications extends ActivityWizard {
                 }
                 catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
                 new DialogClass(G.currentActivity).showOk(G.T.getSentence(759), G.T.getSentence(770));
             }

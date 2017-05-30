@@ -24,6 +24,8 @@ import ir.parsansoft.app.ihs.center.Utility.IPAddress.ipV4Parameters;
 import ir.parsansoft.app.ihs.center.adapters.AdapterWIFIList;
 import ir.parsansoft.app.ihs.center.adapters.AdapterWIFIList.WiFiSelect;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class ActivityWelcome3Network extends ActivityWizard {
 
     CO_f_setting_network fo;
@@ -62,6 +64,8 @@ public class ActivityWelcome3Network extends ActivityWizard {
                     }
                     catch (InterruptedException e) {
                         G.printStackTrace(e);
+
+                        sendCrashLog(e, "جستجوی access pointها", Thread.currentThread().getStackTrace()[2]);
                     }
                 }
             }
@@ -167,7 +171,6 @@ public class ActivityWelcome3Network extends ActivityWizard {
                             }
                         });
                     } else {
-                        G.toast("Wifi not connected !");
                         new DialogClass(G.currentActivity).showOk(G.T.getSentence(719), G.T.getSentence(720));
                         myWM.connectToMainAP();
                     }
@@ -352,6 +355,8 @@ public class ActivityWelcome3Network extends ActivityWizard {
         }
         catch (Exception e) {
             G.printStackTrace(e);
+
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
         }
     }
 

@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +49,7 @@ import ir.parsansoft.app.ihs.center.components.AssetsManager;
 
 
 public class G extends Application {
+
 
     public static Context context;
     public static LayoutInflater inflater;
@@ -95,6 +98,7 @@ public class G extends Application {
     public static String URL_Weather_Webservice;
     public static String URL_Map_Webservice;
     public static String URL_Sms_Webservice;
+    public static String URL_CRASH_LOG;
 
     public static final int DEFAULT_LANGUAGE_ID = 1;
     public static final Handler HANDLER = new Handler();
@@ -121,6 +125,8 @@ public class G extends Application {
     public static final int WEATHERARARMCODE = 110011;
     public static final String FirebaseAPIURL = "https://fcm.googleapis.com/fcm/send";
     public static final String FirebaseAPIKEY = "AIzaSyApgExV9B9BdzWlEJcS15f1MpxHZt_oO_0";
+    private static final String CENTER = "5";
+    private final static String CrashLogToken = "e388c1c5df4933fa01f6da9f92595589";
 
 
     @SuppressLint("NewApi")
@@ -128,6 +134,7 @@ public class G extends Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+
         log("Initializing G class ...");
 
         initializeVariables();
@@ -159,6 +166,9 @@ public class G extends Application {
         scenarioBP = new ScenarioBP();
         G.bp = new BP();
         new BroadcastReceiverWeather().setRepeatAlarm(WEATHERARARMCODE, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR);
+
+//                sendCrashLog(e, "تست اولین کرش", Thread.currentThread().getStackTrace()[2]);
+
     }
 
     private void initializeVariables() {
@@ -240,13 +250,12 @@ public class G extends Application {
                 G.setting.serverSocketIP = ip;
                 Database.Setting.edit(G.setting);
             }
-        } catch (UnknownHostException e) {
-            G.printStackTrace(e);
-        } catch (MalformedURLException e) {
+        } catch (UnknownHostException | MalformedURLException e) {
             G.printStackTrace(e);
         }
-//        return "192.168.1.14";//ip;
-        return ip;
+        return "82.99.217.84"; // test server ip;
+//        return "192.168.1.14"; // local server ip;
+//        return ip; // IHS main server IP
     }
 
     public static int getServerPort() {
@@ -254,15 +263,26 @@ public class G extends Application {
     }
 
     public static void configureURLs() {
-        URL_Webservice = "http://service." + G.setting.serverURL + "/service.aspx";
-        URL_Weather_Webservice = "http://service." + G.setting.serverURL + "/service.aspx";
-        URL_Map_Webservice = "http://service." + G.setting.serverURL + "/map/";
-        URL_Sms_Webservice = "http://user." + G.setting.serverURL + "/[LANG]/service/sms?customerid=[CUSTOMERID]&exkey=[EXKEY]";
-
+        //Main Server
+//        URL_Webservice = "http://service." + G.setting.serverURL + "/service.aspx";
+//        URL_Weather_Webservice = "http://service." + G.setting.serverURL + "/service.aspx";
+//        URL_Map_Webservice = "http://service." + G.setting.serverURL + "/map/";
+//        URL_Sms_Webservice = "http://user." + G.setting.serverURL + "/[LANG]/service/sms?customerid=[CUSTOMERID]&exkey=[EXKEY]";
+//        URL_CRASH_LOG = "http://bug.jahanmir.ir/api/ihs/register";
+//
+        //test server
+        URL_Webservice = "http://ihs2.s111.ir/service.aspx";
+        URL_Weather_Webservice = "http://ihs2.s111.ir/service.aspx";
+        URL_Map_Webservice = "http://ihs2.s111.ir/map/";
+        URL_Sms_Webservice = "http://ihs2.s111.ir/[LANG]/service/sms?customerid=[CUSTOMERID]&exkey=[EXKEY]";
+        URL_CRASH_LOG = "http://bug.jahanmir.ir/api/ihs/register";
+//
+        //local server
 //        URL_Webservice = "http://192.168.1.14:2012/service.aspx";
 //        URL_Weather_Webservice = "http://192.168.1.14:2012/service.aspx";
 //        URL_Map_Webservice = "http://192.168.1.14:2012/map/";
 //        URL_Sms_Webservice = "http://192.168.1.14:2012/[LANG]/service/sms?customerid=[CUSTOMERID]&exkey=[EXKEY]";
+//        URL_CRASH_LOG = "http://192.168.1.14:2012/api/ihs/register";
     }
 
     public static int getIconResource(String name) {
@@ -305,27 +325,63 @@ public class G extends Application {
                     }
                     return G.IOModuleSocket.get(i);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
         return null;
     }
 
+    public static void sendCrashLog(Exception e, String description, StackTraceElement stackTraceElement) {
 
-    //    public static String getSentence(int sentenceID) {
-    //        Database.Translation.Struct[] sentence;
-    //        sentence = Database.Translation.select("langID=" + G.setting.languageID + " AND SentenseID=" + sentenceID);
-    //        if (sentence == null)
-    //        {
-    //            sentence = Database.Translation.select("langID=" + DEFAULT_LANGUAGE_ID + " AND SentenseID=" + sentenceID);
-    //            if (sentence == null)
-    //                return "NT:" + sentenceID;
-    //        }
-    //        return sentence[0].sentenseText;
-    //    }
+        try {
+            String fullClassName = stackTraceElement.getClassName();
+            String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+            String methodName = stackTraceElement.getMethodName();
+            int lineNumber = stackTraceElement.getLineNumber();
+
+            ModuleWebservice mw = new ModuleWebservice();
+            mw.url(G.URL_CRASH_LOG);
+            mw.addParameter("Token", CrashLogToken);
+            mw.addParameter("CustomerID", G.setting.customerID + "");
+            mw.addParameter("Type", CENTER);
+            mw.addParameter("MAC", G.networkSetting.wiFiMac);
+            mw.addParameter("CenterVer", G.setting.ver);
+            mw.addParameter("Error", e.getMessage());
+            mw.addParameter("Description", "Full Class name: " + fullClassName + "\n"
+                    + "SubClass Name: " + className + "\n"
+                    + "Method Name: " + methodName + "\n"
+                    + "Line number: " + lineNumber + "\n"
+                    + "Description: " + description);
+            mw.setListener(new ModuleWebservice.WebServiceListener() {
+
+                @Override
+                public void onFail(int statusCode) {
+                    G.log("Failed to upload crash log !");
+                }
+
+                @Override
+                public void onDataReceive(String data, boolean cached) {
+                    try {
+
+                        JSONObject jsonObject = new JSONObject(data);
+                        boolean status = jsonObject.getBoolean("Status");
+                        if (status) {
+
+                        }
+
+                        String msg = jsonObject.getString("Message");
+
+                    } catch (Exception e) {
+                        G.printStackTrace(e);
+                    }
+                }
+            });
+            mw.read();
+        } catch (Exception e1) {
+            G.printStackTrace(e1);
+        }
+    }
 
 
     public final static Bitmap getRoomIconBitmap(String icon) {

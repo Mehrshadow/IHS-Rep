@@ -103,7 +103,7 @@ public class ActivitySettingWeather extends ActivitySetting implements OnClickLi
 
         ArrayList<Object> condition = new Weather().getConditionData();
         if (condition == null) {
-            new DialogClass(G.currentActivity).showOk(G.T.getSentence(759), G.T.getSentence(842));
+            new DialogClass(G.currentActivity).showOk(G.T.getSentence(216), G.T.getSentence(842));
             return;
         }
         weatherLayout.setVisibility(View.VISIBLE);

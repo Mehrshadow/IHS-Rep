@@ -90,14 +90,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:visibility="invisible"
-                    android:id="@+id/btn_io_module"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:src="@drawable/lay_main_slidebar_icon_home" />
-
                 <GridView
                     android:id="@+id/grdNodes"
                     android:layout_width="match_parent"

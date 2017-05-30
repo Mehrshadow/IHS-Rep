@@ -16,6 +16,8 @@ import ir.parsansoft.app.ihs.center.NetMessage.NetMessageType;
 import ir.parsansoft.app.ihs.center.SysLog.LogOperator;
 import ir.parsansoft.app.ihs.center.SysLog.LogType;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class SampleNode extends ViewGroup {
 
     protected Socket socket;
@@ -34,7 +36,6 @@ public class SampleNode extends ViewGroup {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return super.onInterceptTouchEvent(ev);
     }
-
 
     public static enum NodeMsgType {
         MSG_DISCOVERY,
@@ -70,18 +71,6 @@ public class SampleNode extends ViewGroup {
 //    public int getIfNodeIsIOModuleNode() {
 //        return myNode.isIoModuleNode;
 //    }
-
-    public int addUI(AllViews.CO_l_node_simple_key simple_key) {
-        return 0;
-    }
-
-    public int addUI(AllViews.CO_l_node_simple_dimmer dimmer) {
-        return 0;
-    }
-
-    public int addUI(AllViews.CO_l_node_IoModule ioModule) {
-        return 0;
-    }
 
     public int addUI(View row) {
         return 0;
@@ -219,7 +208,6 @@ public class SampleNode extends ViewGroup {
 
                     } catch (IOException e) {
                         G.printStackTrace(e);
-
                     }
                     try {
                         onSocketDisconnect();
@@ -244,7 +232,7 @@ public class SampleNode extends ViewGroup {
                     outputStream = new DataOutputStream(socket.getOutputStream());
 
             } catch (IOException e) {
-                e.printStackTrace();
+                G.printStackTrace(e);
             }
         }
 
@@ -268,7 +256,9 @@ public class SampleNode extends ViewGroup {
                         socket.close();
                     } catch (Exception e1) {
                         G.printStackTrace(e1);
+                        sendCrashLog(e1, "", Thread.currentThread().getStackTrace()[2]);
                     }
+                sendCrashLog(e, "ارسال دستور به دستگاه", Thread.currentThread().getStackTrace()[2]);
             }
 //            try {
 //                socket.close();
@@ -331,8 +321,8 @@ public class SampleNode extends ViewGroup {
                     break;
                 }
             } catch (Exception e) {
-                G.log(e.getMessage());
                 G.printStackTrace(e);
+                sendCrashLog(e, "ارسال دستور به دستگاه", Thread.currentThread().getStackTrace()[2]);
                 return;
             }
         }
@@ -398,6 +388,7 @@ public class SampleNode extends ViewGroup {
             sendMessageToNode("GSFD*"); // Get Status From Device
             G.log("Sending GSFD");
         } catch (Exception e) {
+            sendCrashLog(e, "ارسال دستور GSFD به دستگاه", Thread.currentThread().getStackTrace()[2]);
         }
     }
 

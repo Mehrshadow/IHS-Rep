@@ -215,7 +215,6 @@ public class ActivitySections extends ActivityEnhanced implements OnClickListene
             }
         });
         fo.btnMyHouse.setOnClickListener(this);
-        fo.btnIOModule.setOnClickListener(this);
     }
 
     public void showAddMenu(View v) {
@@ -603,7 +602,7 @@ public class ActivitySections extends ActivityEnhanced implements OnClickListene
         grdListAdapter = null;
         if (nodes != null) {
             grdListAdapter = new AdapterListViewNode(G.currentActivity, nodes, true);
-        }else {
+        } else {
             nodes = new Database.Node.Struct[0];
         }
         fo.grdNodes.setAdapter(grdListAdapter);
@@ -667,10 +666,6 @@ public class ActivitySections extends ActivityEnhanced implements OnClickListene
                 break;
             case R.id.btnMyHouse:
                 showAllNodes();
-                break;
-            case R.id.btn_io_module:
-                startActivity(new Intent(G.currentActivity, ActivityMyHouse.class));
-                Animation.doAnimation(Animation_Types.FADE);
                 break;
         }
     }

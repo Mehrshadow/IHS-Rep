@@ -1,0 +1,282 @@
+# view res/layout/design_navigation_item.xml #generated:17
+-keep class android.support.design.internal.NavigationMenuItemView { <init>(...); }
+
+# view res/layout/design_navigation_menu.xml #generated:17
+-keep class android.support.design.internal.NavigationMenuView { <init>(...); }
+
+# view res/layout/design_bottom_sheet_dialog.xml #generated:17
+-keep class android.support.design.widget.CoordinatorLayout { <init>(...); }
+
+# view res/layout/design_layout_snackbar.xml #generated:18
+# view sw600dp-v13\res/layout-sw600dp-v13/design_layout_snackbar.xml #generated:18
+-keep class android.support.design.widget.Snackbar$SnackbarLayout { <init>(...); }
+
+# view res/layout/f_senario.xml #generated:127
+# view res/layout/f_welcome_scenario.xml #generated:124
+-keep class android.support.v4.view.ViewPager { <init>(...); }
+
+# view res/layout/abc_alert_dialog_material.xml #generated:75
+-keep class android.support.v4.widget.NestedScrollView { <init>(...); }
+
+# view res/layout/abc_alert_dialog_button_bar_material.xml #generated:40
+-keep class android.support.v4.widget.Space { <init>(...); }
+
+# view res/layout/abc_action_menu_item_layout.xml #generated:17
+-keep class android.support.v7.view.menu.ActionMenuItemView { <init>(...); }
+
+# view res/layout/abc_expanded_menu_layout.xml #generated:17
+-keep class android.support.v7.view.menu.ExpandedMenuView { <init>(...); }
+
+# view res/layout/abc_list_menu_item_layout.xml #generated:17
+# view res/layout/abc_popup_menu_item_layout.xml #generated:17
+-keep class android.support.v7.view.menu.ListMenuItemView { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:27
+-keep class android.support.v7.widget.ActionBarContainer { <init>(...); }
+
+# view res/layout/abc_action_mode_bar.xml #generated:19
+# view res/layout/abc_screen_toolbar.xml #generated:43
+-keep class android.support.v7.widget.ActionBarContextView { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:17
+-keep class android.support.v7.widget.ActionBarOverlayLayout { <init>(...); }
+
+# view res/layout/abc_action_menu_layout.xml #generated:17
+-keep class android.support.v7.widget.ActionMenuView { <init>(...); }
+
+# view res/layout/abc_activity_chooser_view.xml #generated:19
+-keep class android.support.v7.widget.ActivityChooserView$InnerLayout { <init>(...); }
+
+# view res/layout/abc_alert_dialog_button_bar_material.xml #generated:18
+-keep class android.support.v7.widget.ButtonBarLayout { <init>(...); }
+
+# view res/layout/abc_screen_content_include.xml #generated:19
+-keep class android.support.v7.widget.ContentFrameLayout { <init>(...); }
+
+# view res/layout/abc_alert_dialog_material.xml #generated:48
+-keep class android.support.v7.widget.DialogTitle { <init>(...); }
+
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:23
+-keep class android.support.v7.widget.FitWindowsFrameLayout { <init>(...); }
+
+# view res/layout/abc_dialog_title_material.xml #generated:22
+# view res/layout/abc_screen_simple.xml #generated:17
+-keep class android.support.v7.widget.FitWindowsLinearLayout { <init>(...); }
+
+# view res/layout/abc_search_view.xml #generated:78
+-keep class android.support.v7.widget.SearchView$SearchAutoComplete { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:36
+-keep class android.support.v7.widget.Toolbar { <init>(...); }
+
+# view res/layout/abc_screen_simple.xml #generated:25
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:32
+-keep class android.support.v7.widget.ViewStubCompat { <init>(...); }
+
+# view AndroidManifest.xml #generated:300
+-keep class com.google.android.gms.common.api.GoogleApiActivity { <init>(...); }
+
+# view res/layout/d_connect_wifi.xml #generated:64
+-keep class com.xwray.passwordview.PasswordView { <init>(...); }
+
+# view AndroidManifest.xml #generated:269
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_IOModule_SensorType { <init>(...); }
+
+# view AndroidManifest.xml #generated:260
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_IoMadule_Input_Output { <init>(...); }
+
+# view AndroidManifest.xml #generated:264
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_IoMadule_NodeType { <init>(...); }
+
+# view AndroidManifest.xml #generated:255
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_IoMadule_SelectPlace { <init>(...); }
+
+# view AndroidManifest.xml #generated:274
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_IoModule_Device_Select { <init>(...); }
+
+# view AndroidManifest.xml #generated:125
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_w1 { <init>(...); }
+
+# view AndroidManifest.xml #generated:129
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_w2 { <init>(...); }
+
+# view AndroidManifest.xml #generated:133
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_w3 { <init>(...); }
+
+# view AndroidManifest.xml #generated:137
+-keep class ir.parsansoft.app.ihs.center.ActivityAddNode_w4 { <init>(...); }
+
+# view AndroidManifest.xml #generated:243
+-keep class ir.parsansoft.app.ihs.center.ActivityBrowser { <init>(...); }
+
+# view AndroidManifest.xml #generated:77
+-keep class ir.parsansoft.app.ihs.center.ActivityFavorites { <init>(...); }
+
+# view AndroidManifest.xml #generated:69
+-keep class ir.parsansoft.app.ihs.center.ActivityHelp { <init>(...); }
+
+# view AndroidManifest.xml #generated:60
+-keep class ir.parsansoft.app.ihs.center.ActivityMain { <init>(...); }
+
+# view AndroidManifest.xml #generated:296
+-keep class ir.parsansoft.app.ihs.center.ActivityMyHouse { <init>(...); }
+
+# view AndroidManifest.xml #generated:73
+-keep class ir.parsansoft.app.ihs.center.ActivityScenario { <init>(...); }
+
+# view AndroidManifest.xml #generated:117
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW10Notify { <init>(...); }
+
+# view AndroidManifest.xml #generated:121
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW11SMS { <init>(...); }
+
+# view AndroidManifest.xml #generated:81
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW1Name { <init>(...); }
+
+# view AndroidManifest.xml #generated:85
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW2Date { <init>(...); }
+
+# view AndroidManifest.xml #generated:89
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW3Event { <init>(...); }
+
+# view AndroidManifest.xml #generated:93
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW4GPS { <init>(...); }
+
+# view AndroidManifest.xml #generated:97
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW5Weather { <init>(...); }
+
+# view AndroidManifest.xml #generated:101
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW6Temperature { <init>(...); }
+
+# view AndroidManifest.xml #generated:105
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW7Op { <init>(...); }
+
+# view AndroidManifest.xml #generated:109
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW8Keyword { <init>(...); }
+
+# view AndroidManifest.xml #generated:113
+-keep class ir.parsansoft.app.ihs.center.ActivityScenarioW9Switch { <init>(...); }
+
+# view AndroidManifest.xml #generated:65
+-keep class ir.parsansoft.app.ihs.center.ActivitySections { <init>(...); }
+
+# view AndroidManifest.xml #generated:176
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingDateTime { <init>(...); }
+
+# view AndroidManifest.xml #generated:161
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingLOG { <init>(...); }
+
+# view AndroidManifest.xml #generated:166
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingLanguage { <init>(...); }
+
+# view AndroidManifest.xml #generated:156
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingLocation { <init>(...); }
+
+# view AndroidManifest.xml #generated:146
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingMobile { <init>(...); }
+
+# view AndroidManifest.xml #generated:141
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingNetwork { <init>(...); }
+
+# view AndroidManifest.xml #generated:186
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingReset { <init>(...); }
+
+# view AndroidManifest.xml #generated:151
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingSMS { <init>(...); }
+
+# view AndroidManifest.xml #generated:181
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingScreen { <init>(...); }
+
+# view AndroidManifest.xml #generated:247
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingUpdate { <init>(...); }
+
+# view AndroidManifest.xml #generated:171
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingUser { <init>(...); }
+
+# view AndroidManifest.xml #generated:251
+-keep class ir.parsansoft.app.ihs.center.ActivitySettingWeather { <init>(...); }
+
+# view AndroidManifest.xml #generated:51
+-keep class ir.parsansoft.app.ihs.center.ActivityStarter { <init>(...); }
+
+# view AndroidManifest.xml #generated:223
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome10Mobile { <init>(...); }
+
+# view AndroidManifest.xml #generated:227
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome11Scenario { <init>(...); }
+
+# view AndroidManifest.xml #generated:235
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome12User { <init>(...); }
+
+# view AndroidManifest.xml #generated:239
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome13ChargeSMS { <init>(...); }
+
+# view AndroidManifest.xml #generated:191
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome1Language { <init>(...); }
+
+# view AndroidManifest.xml #generated:195
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome2Screen { <init>(...); }
+
+# view AndroidManifest.xml #generated:199
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome3Network { <init>(...); }
+
+# view AndroidManifest.xml #generated:203
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome4Location { <init>(...); }
+
+# view AndroidManifest.xml #generated:207
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome5DateandTime { <init>(...); }
+
+# view AndroidManifest.xml #generated:211
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome6Weather { <init>(...); }
+
+# view AndroidManifest.xml #generated:231
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome7Specifications { <init>(...); }
+
+# view AndroidManifest.xml #generated:215
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome8FloorandRoom { <init>(...); }
+
+# view AndroidManifest.xml #generated:219
+-keep class ir.parsansoft.app.ihs.center.ActivityWelcome9Equipment { <init>(...); }
+
+# view AndroidManifest.xml #generated:284
+-keep class ir.parsansoft.app.ihs.center.BootReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:290
+-keep class ir.parsansoft.app.ihs.center.BroadcastReceiverWeather { <init>(...); }
+
+# view AndroidManifest.xml #generated:289
+-keep class ir.parsansoft.app.ihs.center.BroadcastReciverAlarmManager { <init>(...); }
+
+# view AndroidManifest.xml #generated:44
+-keep class ir.parsansoft.app.ihs.center.G { <init>(...); }
+
+# view res/layout/f_welcome_specifications.xml #generated:281
+# view res/layout/f_welcome_specifications_rtl.xml #generated:283
+-keep class ir.parsansoft.app.ihs.center.MaskedEditText { <init>(...); }
+
+# view AndroidManifest.xml #generated:280
+-keep class ir.parsansoft.app.ihs.center.ServiceServerCommunication { <init>(...); }
+
+# view res/layout/d_section_add_room.xml #generated:86
+# view res/layout/d_section_add_room_rtl.xml #generated:68
+# view res/layout/d_section_add_section.xml #generated:59
+# view res/layout/d_section_add_section_rtl.xml #generated:36
+# view res/layout/f_section_add_node_select_place.xml #generated:186
+# view res/layout/f_section_add_node_select_place_rtl.xml #generated:53
+# view res/layout/f_section_add_node_w2.xml #generated:186
+# view res/layout/f_section_add_node_w2_rtl.xml #generated:53
+-keep class ir.parsansoft.app.ihs.center.components.ComIconSelector { <init>(...); }
+
+# view res/layout/f_setting_datetime.xml #generated:58
+# view res/layout/f_welcome_datetime.xml #generated:57
+-keep class ir.parsansoft.app.ihs.center.components.DatePickerComponent { <init>(...); }
+
+# view res/layout/d_fragment_base.xml #generated:2
+-keep class ir.parsansoft.app.ihs.center.components.NonSwipeableViewPager { <init>(...); }
+
+# view res/layout/f_senario_w2.xml #generated:768
+# view res/layout/f_senario_w2_rtl.xml #generated:762
+# view res/layout/f_setting_datetime.xml #generated:33
+# view res/layout/f_welcome_datetime.xml #generated:32
+-keep class ir.parsansoft.app.ihs.center.components.TimePickerComponent { <init>(...); }
+

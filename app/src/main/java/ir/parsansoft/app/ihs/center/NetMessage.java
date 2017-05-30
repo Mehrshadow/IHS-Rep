@@ -52,7 +52,7 @@ public class NetMessage {
     public final static int Notify = 11;
     public final static int GPSAnnounce = 12;
     public final static int KeepAlive = 13;
-    public final static int SocketStatus = 14;
+    public final static int     SocketStatus = 14;
 
     public final static int Delete = 0;
     public final static int Update = 1;

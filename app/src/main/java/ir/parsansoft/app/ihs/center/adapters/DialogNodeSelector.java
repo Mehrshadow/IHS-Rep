@@ -403,7 +403,10 @@ public class DialogNodeSelector extends DialogFragment {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             selectedIndex = position;
                             myNodeID = nodes[selectedIndex].iD;
-                            switches = Database.Switch.select("NodeID=" + myNodeID);
+                            switches = Database.Switch.select("NodeID=" + myNodeID + " AND switchType not in ( " +
+                                    AllNodes.Switch_Type.Thermo_SetPoint + ", " +
+                                    AllNodes.Switch_Type.Thermo_TEMP_TYPE + ")");
+
                             if (switches != null && switches.length > 0) {
                                 if (switches.length > 1) {
                                     ldo.btnPositive.setOnClickListener(new OnClickListener() {
@@ -470,7 +473,9 @@ public class DialogNodeSelector extends DialogFragment {
             public void setUserVisibleHint(boolean isVisibleToUser) {
                 super.setUserVisibleHint(isVisibleToUser);
                 if (isVisibleToUser) {
-                    switches = Database.Switch.select("NodeID=" + myNodeID);
+                    switches = Database.Switch.select("NodeID=" + myNodeID + " AND switchType not in ( " +
+                            AllNodes.Switch_Type.Thermo_SetPoint + ", " +
+                            AllNodes.Switch_Type.Thermo_TEMP_TYPE + ")");
                     G.log("load Switches ....");
                     if (switches != null)
                         if (switches.length > 0) {
@@ -1161,7 +1166,8 @@ public class DialogNodeSelector extends DialogFragment {
             public void setUserVisibleHint(boolean isVisibleToUser) {
                 super.setUserVisibleHint(isVisibleToUser);
                 if (isVisibleToUser) {
-                    switches = Database.Switch.select("NodeID=" + myNodeID);
+                    switches = Database.Switch.select("NodeID=" + myNodeID + " AND switchType not in ( " + AllNodes.Switch_Type.Thermo_CurrentTemperature
+                            + ", " + AllNodes.Switch_Type.Thermo_SetPoint + ", " + AllNodes.Switch_Type.Thermo_TEMP_TYPE + ")");
                     G.log("load Switches ....");
                     if (switches != null)
                         if (switches.length > 0) {

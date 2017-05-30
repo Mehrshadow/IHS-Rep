@@ -1,6 +1,7 @@
 package ir.parsansoft.app.ihs.center.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -118,7 +119,7 @@ public class AdapterFakeNodeSwitches extends BaseAdapter {
         return switchItems[id].iD;
     }
 
-    private void loadSpinner(final int mainPosition) {
+    private void loadSpinner(final int selectedRowPosition) {
         try {
 //            spinnerPorts = new ArrayList<>();
 //            spinnerPorts.add("3");
@@ -147,45 +148,29 @@ public class AdapterFakeNodeSwitches extends BaseAdapter {
             mAdapterIoTypesSpinner = new AdapterIoTypesSpinner(spinnerPorts);
             spnPorts.setAdapter(mAdapterIoTypesSpinner);
 
-            spnPorts.setSelection(mainPosition);
+            spnPorts.setSelection(selectedRowPosition);
+
 
             spnPorts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    // spinner ha be tedad switch ha load mishan, vase in bare aval datashoon hazf nashe
+                    // spinner ha be tedad switch ha load mishan, vase in k bare aval datashoon hazf nashe
                     // be tedade switch ha niaz darim
                     try {
-                        if (timesLoaded > switchItems.length - 1) {
 
-                            switchItems[mainPosition].IOModulePort = Integer.valueOf(spinnerPorts.get(position)) + 2;
+                        switchItems[selectedRowPosition].IOModulePort = Integer.valueOf(spinnerPorts.get(position)) + 2;
 
-                            Port = spinnerPorts.get(position);
-                            temp.remove(mainPosition);
-                            temp.add(mainPosition, Port);
-
-                            spinnerPorts.clear();
-                            spinnerPorts.addAll(availablePorts);
-//                            spinnerPorts = new ArrayList<>(availablePorts);
-                            spinnerPorts.removeAll(temp);
-                            mAdapterIoTypesSpinner.notifyDataSetChanged();
-//                            notifyDataSetChanged();
-
-                        } else {
-
-                            temp.add(spinnerPorts.get(0));
-                            spinnerPorts.remove(0);
-
-//                            mAdapterIoTypesSpinner.notifyDataSetChanged();
-//                            notifyDataSetChanged();
+                        Port = spinnerPorts.get(position);
 
 
-                            timesLoaded++;
-                        }
+                        strokeInput();
+
                     } catch (Exception e) {
                         G.printStackTrace(e);
                     }
                 }
+
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -198,4 +183,10 @@ public class AdapterFakeNodeSwitches extends BaseAdapter {
 
     }
 
+    private  void strokeInput(){
+        for (int i = 0; i < spnPorts.getCount(); i++) {
+            ((TextView)spnPorts.getChildAt(i)).setTextColor(Color.RED);
+            ((TextView)spnPorts.getChildAt(i)).setText(((TextView) spnPorts.getChildAt(i)).getText() + " selected!!");
+        }
+    }
 }

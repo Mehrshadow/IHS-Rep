@@ -23,14 +23,12 @@ import ir.parsansoft.app.ihs.center.SysLog.LogType;
 
 import static ir.parsansoft.app.ihs.center.Database.Switch.select;
 import static ir.parsansoft.app.ihs.center.G.nodeCommunication;
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
 import static ir.parsansoft.app.ihs.center.R.drawable.lay_simple_switch_off;
 
 public class AllNodes {
     public static int uiCount = 0;
     public final static int myHouseDefaultRoomId = -1;
-
-    private SparseArray<CO_l_node_simple_key> coolerUIs;
-    ////
 
     public static final class Switch_Type {
         public static final int SIMPLE_SWITCH = 1;
@@ -54,6 +52,8 @@ public class AllNodes {
         public static final int Thermo_SPEED_FAST = 16;
         public static final int Thermo_CurrentTemperature = 17;
         public static final int Thermo_SetPoint = 18;
+        public static final int Thermo_POWER = 19;
+        public static final int Thermo_TEMP_TYPE = 20;
     }
 
     public static final class Node_Type {
@@ -64,6 +64,7 @@ public class AllNodes {
         public static final int SIMPLE_DIMMER_2 = 5;
         public static final int AIR_CONDITION = 6;
         public static final int CURTAIN_SWITCH = 7;
+
         public static final int WC_SWITCH = 8;
 
         public static final int IOModule = 9;
@@ -132,6 +133,7 @@ public class AllNodes {
             } catch (Exception e) {
                 type = 0;
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
     }
@@ -300,7 +302,6 @@ public class AllNodes {
             G.log("Result is :" + result);
             setLastCommTime(System.currentTimeMillis());
 
-            setProgressVisiblity(false);
 
             float[] previousValues;
 
@@ -325,6 +326,7 @@ public class AllNodes {
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "دریافت اطلاعات از دستگاه simple key واقعی", Thread.currentThread().getStackTrace()[2]);
                 }
 
             } else {
@@ -332,8 +334,6 @@ public class AllNodes {
                 previousValues = new float[3];
 
                 try {
-                    setProgressVisiblity(false);
-
                     if (switches.length == 1) {
                         int index = result.indexOf("*4", 0) + 2;
                         previousValues[0] = switches[0].value;
@@ -366,6 +366,7 @@ public class AllNodes {
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "دریافت اطلاعات از دستگاه simple key متصل به IO", Thread.currentThread().getStackTrace()[2]);
                 }
             }
 
@@ -398,6 +399,8 @@ public class AllNodes {
                     }
                 });
 
+                setProgressVisiblity(false);
+
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
                 netMessage.data = myNode.getNodeStatusJson(false);// true means > isIOModule = 1
@@ -408,7 +411,6 @@ public class AllNodes {
                 G.mobileCommunication.sendMessage(netMessage);
                 G.server.sendMessage(netMessage);
 
-
                 // Run scenarios that uses this condition.
                 for (int i = 0; i < 3; i++)
                     if (switches.length > i && previousValues[i] != switches[i].value) {
@@ -418,6 +420,7 @@ public class AllNodes {
 
             } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -437,6 +440,7 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -535,7 +539,8 @@ public class AllNodes {
 
         @Override
 //        public int addUI(final CO_l_node_simple_dimmer newSimpleDim) {
-        public int addUI(View view) {
+        public int addUI(final View view) {
+
             uiCount++;
             if (dimmerUIs.size() > 5) {
                 G.log("Deleting some UI references to reduce memory");
@@ -573,6 +578,7 @@ public class AllNodes {
                         switch (e.getAction()) {
 
                             case MotionEvent.ACTION_DOWN:
+                                view.setEnabled(false);
                                 v.getParent().requestDisallowInterceptTouchEvent(true);
                                 if (y >= dimHeight * 0.87) {
                                     y = dimHeight;
@@ -600,6 +606,11 @@ public class AllNodes {
                                 tempVal[0] = value;
                                 G.log(" Dimmer ACTION_MOVE - y=" + y + "  valu=" + value + " tempVal[0]=" + tempVal[0]);
                                 draw(y, value);
+                                break;
+                            case MotionEvent.ACTION_CANCEL:
+                                G.log(" Dimmer ACTION_UP - y=" + y + "  value=" + value + " tempVal[0]=" + tempVal[0]);
+                                v.getParent().requestDisallowInterceptTouchEvent(true);
+                                changeValue(tempVal[0], tempVal[1], null, LogOperator.OPERAOR, G.currentUser.iD);
                                 break;
                         }
                         v.onTouchEvent(e);
@@ -727,7 +738,7 @@ public class AllNodes {
                 @Override
                 public void run() {
                     for (int i = 0; i < dimmerUIs.size(); i++) {
-                        if (visiblity == true) {
+                        if (visiblity) {
                             dimmerUIs.valueAt(i).prgDoOperation.setVisibility(View.VISIBLE);
                         } else {
                             dimmerUIs.valueAt(i).prgDoOperation.setVisibility(View.INVISIBLE);
@@ -799,6 +810,8 @@ public class AllNodes {
                     }
                 });
 
+                setProgressVisiblity(false);
+
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
                 netMessage.data = myNode.getNodeStatusJson(false);// true means > isIOModule = 1
@@ -809,7 +822,6 @@ public class AllNodes {
                 G.mobileCommunication.sendMessage(netMessage);
                 G.server.sendMessage(netMessage);
 
-
                 // Run scenarios that uses this condition.
                 for (int i = 0; i < 3; i++)
                     if (switches.length > i && previusValues[i] != switches[i].value) {
@@ -819,6 +831,8 @@ public class AllNodes {
 
             } catch (Exception e) {
                 G.printStackTrace(e);
+
+                sendCrashLog(e, "پردازش اطلاعات دریافت شده از دیمر", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -842,10 +856,14 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
         public void changeValue(float value1, float value2, final NetMessage originalNetMessage, final LogOperator op, final int operatorID) {
+
+            setProgressVisiblity(true);
+
             final NodeMsg nodeMsg = new NodeMsg();
             nodeMsg.msgType = NodeMsgType.MSG_DO_OPERATION;
             nodeMsg.node = myNode;
@@ -860,7 +878,6 @@ public class AllNodes {
                 SysLog.log("Dimmer:" + myNode.name + " Value Changed from (" + switches[0].value + "," + switches[1].value + ") to (" + value1 + "," + value2 + ")", LogType.VALUE_CHANGE, op, operatorID);
                 nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWD1.toString() + "*3DIM1:" + (int) nv1 + "%*4DIM2:" + nv2 + "%#");
             }
-
 
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -895,7 +912,6 @@ public class AllNodes {
         }
 
         @Override
-//        public int addUI(final CO_l_node_simple_key ui) {
         public int addUI(View view) {
             uiCount++;
             if (coolerUIs.size() > 5) {
@@ -1086,7 +1102,6 @@ public class AllNodes {
             G.log("Result is :" + result);
             setLastCommTime(System.currentTimeMillis());
 
-            setProgressVisiblity(false);
 
             float[] previousValues;
 
@@ -1111,6 +1126,7 @@ public class AllNodes {
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
             } else {
 
@@ -1143,6 +1159,7 @@ public class AllNodes {
 //                       SysLog.log("Change switch " + switches[i].name + " status", SysLog.LogType.DATA_CHANGE, op, operatorID);
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
             }
 
@@ -1213,6 +1230,8 @@ public class AllNodes {
                     }
                 });
 
+                setProgressVisiblity(false);
+
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
                 netMessage.data = myNode.getNodeStatusJson(false);
@@ -1231,11 +1250,9 @@ public class AllNodes {
                         G.scenarioBP.runBySwitchStatus(switches[i]);
                     }
 
-            } catch (
-                    Exception e)
-
-            {
+            } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
 
         }
@@ -1255,6 +1272,7 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -1268,13 +1286,13 @@ public class AllNodes {
 
                 //baraye inke dore kam va ziad ham zaman roshan nashavnd
                 if (switchIndex == 2) {
-                    nodeMsg.sentData = "*" + switches[switchIndex].IOModulePort + (int) newValue
+                    nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex].IOModulePort + (int) newValue
                             + "*" + switches[switchIndex - 1].IOModulePort + 0;
                 } else if (switchIndex == 1) {
-                    nodeMsg.sentData = "*" + switches[switchIndex].IOModulePort + (int) newValue
+                    nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex].IOModulePort + (int) newValue
                             + "*" + switches[switchIndex + 1].IOModulePort + 0;
                 } else if (switchIndex == 0) {
-                    nodeMsg.sentData = "*" + switches[switchIndex].IOModulePort + (int) newValue;
+                    nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex].IOModulePort + (int) newValue;
                 }
 
             } else {
@@ -1330,7 +1348,6 @@ public class AllNodes {
         private SparseArray<CO_l_node_simple_key> curtainUIs = new SparseArray<CO_l_node_simple_key>();
         private Database.Switch.Struct[] switches;
         private boolean isBusy;
-
 
         public CurtainSwitch(Database.Node.Struct node) {
             super(G.context);
@@ -1516,6 +1533,7 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -1525,7 +1543,6 @@ public class AllNodes {
             // example result *1AS*2IOMudole*30*41*50*60*70*80*91*100*110*120*130*140*150*161*170*181#
             setLastCommTime(System.currentTimeMillis());
 
-            setProgressVisiblity(false);
 
             float[] previousValues;
 
@@ -1538,23 +1555,27 @@ public class AllNodes {
                     //value ghabli ro ham darim
                     for (int i = 0; i < switches.length; i++) {
                         int index = 0;
-                        if (switches[i].IOModulePort > 9 && switches[i].IOModulePort != 0) {// ex: *101
-                            index = result.indexOf("*" + switches[i].IOModulePort, 0) + 3;
-                        } else {
-                            index = result.indexOf("*" + switches[i].IOModulePort, 0) + 2;
-                        }
+                        if (i != 2) {// 2 = stop
+                            if (switches[i].IOModulePort > 9 && switches[i].IOModulePort != 0) {// ex: *101
+                                index = result.indexOf("*" + switches[i].IOModulePort, 0) + 3;
+                            } else {
+                                index = result.indexOf("*" + switches[i].IOModulePort, 0) + 2;
+                            }
 
-                        previousValues[switches[i].IOModulePort] = switches[i].value;
-                        switches[i].value = Integer.parseInt(result.substring(index, index + 1));
-                        if (i == switches.length - 1) { // 2 = stop
+                            previousValues[switches[i].IOModulePort] = switches[i].value;
+                            switches[i].value = Integer.parseInt(result.substring(index, index + 1));
+                        } else {
                             if (switches[0].value == 0 && switches[1].value == 0)
                                 switches[2].value = 1;
+                            else
+                                switches[2].value = 0;
                         }
 
                         Database.Switch.edit(switches[i]);
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
             } else {
 
@@ -1575,6 +1596,7 @@ public class AllNodes {
 
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
             }
             try {
@@ -1619,6 +1641,8 @@ public class AllNodes {
                     }
                 });
 
+                setProgressVisiblity(false);
+
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
                 netMessage.data = myNode.getNodeStatusJson(false);
@@ -1629,7 +1653,6 @@ public class AllNodes {
                 G.mobileCommunication.sendMessage(netMessage);
                 G.server.sendMessage(netMessage);
 
-
                 // Run scenarios that uses this condition.
                 if (previousValues[0] != switches[0].value) {
                     G.log("previusValues [" + 0 + "] =" + previousValues[0] + "   New Value[" + 0 + "] = " + switches[0].value);
@@ -1638,6 +1661,7 @@ public class AllNodes {
 
             } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -1653,14 +1677,14 @@ public class AllNodes {
 
                 //baraye inke switch baz o baste hamzaman roshan nashavand
                 if (switchIndex == 2) {
-                    nodeMsg.sentData = "*" + switches[switchIndex - 2].IOModulePort + 0
+                    nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex - 2].IOModulePort + 0
                             + "*" + switches[switchIndex - 1].IOModulePort + 0;
                 }
                 if (switchIndex == 1) {
-                    nodeMsg.sentData = "*" + switches[switchIndex].IOModulePort + (int) newValue
+                    nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex].IOModulePort + (int) newValue
                             + "*" + switches[switchIndex - 1].IOModulePort + 0;
                 } else if (switchIndex == 0) {
-                    nodeMsg.sentData = "*" + switches[switchIndex].IOModulePort + (int) newValue
+                    nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex].IOModulePort + (int) newValue
                             + "*" + switches[switchIndex + 1].IOModulePort + 0;
                 }
             } else {
@@ -1831,7 +1855,6 @@ public class AllNodes {
 
             try {
 
-                setProgressVisiblity(false);
 
                 float[] previousValues;
 
@@ -1856,6 +1879,7 @@ public class AllNodes {
                         }
                     } catch (Exception e) {
                         G.printStackTrace(e);
+                        sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                     }
                 } else {
 
@@ -1889,6 +1913,7 @@ public class AllNodes {
                     }
                 });
 
+                setProgressVisiblity(false);
 
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
@@ -1909,6 +1934,7 @@ public class AllNodes {
 
             } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
 
         }
@@ -1928,6 +1954,7 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -1971,6 +1998,7 @@ public class AllNodes {
                 thread.start();
             } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
 
         }
@@ -2041,7 +2069,6 @@ public class AllNodes {
             G.log("NodeID=" + myNode.iD + "  ui code : " + uiCount);
             return uiCount;
         }
-
 
         @Override
         public void setProgressVisiblity(final boolean visiblity) {
@@ -2151,6 +2178,7 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -2327,7 +2355,6 @@ public class AllNodes {
             G.log("Result is :" + result);
             setLastCommTime(System.currentTimeMillis());
 
-            setProgressVisiblity(false);
 
             float[] previousValues;
 
@@ -2353,6 +2380,7 @@ public class AllNodes {
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
 
             }
@@ -2386,6 +2414,8 @@ public class AllNodes {
                     }
                 });
 
+                setProgressVisiblity(false);
+
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
                 netMessage.data = myNode.getNodeStatusJson(false);// true means > isIOModule = 1
@@ -2411,6 +2441,7 @@ public class AllNodes {
 
             } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -2471,20 +2502,35 @@ public class AllNodes {
             final int currentTemperature = (int) switches[3].value;
             final int[] setPoint = {(int) switches[4].value};
 
-            if (switches[0].value == 0)
-                newKey.imgKey1.setImageResource(R.drawable.lay_cooler_slow_off);
+            if (switches[0].value == 0)// low
+                newKey.imgKey1.setImageResource(R.drawable.ic_low_off);
             else
-                newKey.imgKey1.setImageResource(R.drawable.lay_cooler_slow_on);
+                newKey.imgKey1.setImageResource(R.drawable.ic_low_on);
 
-            if (switches[1].value == 0)
-                newKey.imgKey2.setImageResource(R.drawable.lay_cooler_fast_off);
+            if (switches[1].value == 0)// medium
+                newKey.imgKey2.setImageResource(R.drawable.ic_medium_off);
             else
-                newKey.imgKey2.setImageResource(R.drawable.lay_cooler_fast_on);
+                newKey.imgKey2.setImageResource(R.drawable.ic_medium_on);
 
-            if (switches[2].value == 0)
+            if (switches[2].value == 0)// high
                 newKey.imgKey3.setImageResource(R.drawable.ic_high_off);
             else
                 newKey.imgKey3.setImageResource(R.drawable.ic_high_on);
+
+            if (switches[5].value == 0)// power
+                newKey.btnPower.setBackgroundResource(R.drawable.ic_btn_power_off);
+            else
+                newKey.btnPower.setBackgroundResource(R.drawable.ic_btn_power_on);
+
+            if (switches[6].value == 1) { // temp type
+                newKey.btnTempType.setBackgroundResource(R.drawable.ic_btn_cold);
+                newKey.imgTempType.setImageResource(R.drawable.ic_cold);
+                newKey.layCurrentTemp.setBackgroundResource(R.drawable.ic_termo_num_cold);
+            } else {
+                newKey.btnTempType.setBackgroundResource(R.drawable.ic_btn_hot);
+                newKey.imgTempType.setImageResource(R.drawable.ic_hot);
+                newKey.layCurrentTemp.setBackgroundResource(R.drawable.ic_termo_num_hot);
+            }
 
             newKey.txtCurrentTemp.setText(String.valueOf(currentTemperature));
 
@@ -2556,7 +2602,6 @@ public class AllNodes {
                                 setPoint[0] = Integer.parseInt(input);
                                 switches[4].value = setPoint[0];
                                 Database.Switch.edit(switches[4]);
-//                                newKey.txtSetPoint.setText(input);
                                 switchKey(4, LogOperator.OPERAOR, G.currentUser.iD, setPoint[0]);
                             }
 
@@ -2573,6 +2618,22 @@ public class AllNodes {
             });
 
             newKey.txtSetPoint.setText(String.valueOf((int) switches[4].value));
+
+            newKey.btnPower.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    if (!isBusy)
+                        switchKey(5, LogOperator.OPERAOR, G.currentUser.iD, setPoint[0]);
+                }
+            });
+
+            newKey.btnTempType.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    if (!isBusy)
+                        switchKey(6, LogOperator.OPERAOR, G.currentUser.iD, setPoint[0]);
+                }
+            });
 
             if (myNode.status == 0)
                 newKey.prgDoOperation.setVisibility(View.VISIBLE);
@@ -2618,7 +2679,6 @@ public class AllNodes {
             G.log("Result is :" + result);
             setLastCommTime(System.currentTimeMillis());
 
-            setProgressVisiblity(false);
 
             float[] previousValues;
 
@@ -2644,14 +2704,14 @@ public class AllNodes {
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
 
             } else {
 
-                previousValues = new float[5];
+                previousValues = new float[7];
 
                 try {
-                    setProgressVisiblity(false);
 
                     int index = result.indexOf("*3", 0) + 2;
                     previousValues[0] = switches[0].value;
@@ -2668,13 +2728,24 @@ public class AllNodes {
                     switches[2].value = Integer.parseInt(result.substring(index, index + 1));
                     Database.Switch.edit(switches[2]);
 
-                    index = result.indexOf("*6", 0) + 2;// temp 2 raghamie
+                    index = result.indexOf("*6", 0) + 2; // temp
                     previousValues[3] = switches[3].value;
-                    switches[3].value = Integer.parseInt(result.substring(index, index + 2));
+                    switches[3].value = Integer.parseInt(result.substring(index, index + 2));// temp 2 raghamie
                     Database.Switch.edit(switches[3]);
+
+                    index = result.indexOf("*7", 0) + 2;// power
+                    previousValues[5] = switches[5].value;
+                    switches[5].value = Integer.parseInt(result.substring(index, index + 1));
+                    Database.Switch.edit(switches[5]);
+
+                    index = result.indexOf("*8", 0) + 2;// temp type
+                    previousValues[6] = switches[6].value;
+                    switches[6].value = Integer.parseInt(result.substring(index, index + 1));
+                    Database.Switch.edit(switches[6]);
 
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
             }
 
@@ -2686,14 +2757,14 @@ public class AllNodes {
                         for (int i = 0; i < termoUIs.size(); i++) {
                             int k = termoUIs.keyAt(i);
                             if (switches[0].value == 0) {
-                                termoUIs.get(k).imgKey1.setImageResource(R.drawable.lay_cooler_slow_off);
+                                termoUIs.get(k).imgKey1.setImageResource(R.drawable.ic_low_off);
                             } else {
-                                termoUIs.get(k).imgKey1.setImageResource(R.drawable.lay_cooler_slow_on);
+                                termoUIs.get(k).imgKey1.setImageResource(R.drawable.ic_low_on);
                             }
                             if (switches[1].value == 0) {
-                                termoUIs.get(k).imgKey2.setImageResource(R.drawable.lay_cooler_fast_off);
+                                termoUIs.get(k).imgKey2.setImageResource(R.drawable.ic_medium_off);
                             } else {
-                                termoUIs.get(k).imgKey2.setImageResource(R.drawable.lay_cooler_fast_on);
+                                termoUIs.get(k).imgKey2.setImageResource(R.drawable.ic_medium_on);
                             }
                             if (switches[2].value == 0) {
                                 termoUIs.get(k).imgKey3.setImageResource(R.drawable.ic_high_off);
@@ -2701,12 +2772,28 @@ public class AllNodes {
                                 termoUIs.get(k).imgKey3.setImageResource(R.drawable.ic_high_on);
                             }
 
-                            //temprature
+                            //temperature
                             termoUIs.get(k).txtCurrentTemp.setText(String.valueOf((int) switches[3].value));
 
+                            if (switches[5].value == 0)// power
+                                termoUIs.get(k).btnPower.setBackgroundResource(R.drawable.ic_btn_power_off);
+                            else
+                                termoUIs.get(k).btnPower.setBackgroundResource(R.drawable.ic_btn_power_on);
+
+                            if (switches[6].value == 1) { // temp type
+                                termoUIs.get(k).btnTempType.setBackgroundResource(R.drawable.ic_btn_cold);
+                                termoUIs.get(k).imgTempType.setImageResource(R.drawable.ic_cold);
+                                termoUIs.get(k).layCurrentTemp.setBackgroundResource(R.drawable.ic_termo_num_cold);
+                            } else {
+                                termoUIs.get(k).btnTempType.setBackgroundResource(R.drawable.ic_btn_hot);
+                                termoUIs.get(k).imgTempType.setImageResource(R.drawable.ic_hot);
+                                termoUIs.get(k).layCurrentTemp.setBackgroundResource(R.drawable.ic_termo_num_hot);
+                            }
                         }
                     }
                 });
+
+                setProgressVisiblity(false);
 
                 //  Send message to server and local Mobiles
                 NetMessage netMessage = new NetMessage();
@@ -2725,10 +2812,9 @@ public class AllNodes {
                         G.scenarioBP.runBySwitchStatus(switches[i]);
                     }
 
-            } catch (Exception e)
-
-            {
+            } catch (Exception e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -2748,6 +2834,7 @@ public class AllNodes {
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
 
@@ -2783,22 +2870,36 @@ public class AllNodes {
 
             if (myNode.parentNodeId != 0) {
 
-                nodeMsg.sentData = "*" + switches[switchIndex].IOModulePort + (int) newValue;
+                nodeMsg.sentData = "*1SS*2" + Node_Type.IOModule + "*" + switches[switchIndex].IOModulePort + (int) newValue;
 
             } else {
                 switch (switchIndex) {
                     case 0:
-                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*3" + (int) newValue + "*4x*5x");
+                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*3" + (int) newValue);
+//                        nodeMsg.sentData = ("*3" + (int) newValue);
                         break;
                     case 1:
-                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*3x*4" + (int) newValue + "*5x");
+                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*4" + (int) newValue);
+//                        nodeMsg.sentData = ("*4" + (int) newValue);
                         break;
                     case 2:
-                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*3x*4x*5" + (int) newValue);
+                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*5" + (int) newValue);
+//                        nodeMsg.sentData = ("*5" + (int) newValue);
                         break;
                     // set point
                     case 4:
-                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*3x*4x*5x*6" + (int) newValue + "#");
+                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*6" + (int) newValue + "*");
+//                        nodeMsg.sentData = ("*6" + (int) newValue);
+                        break;
+                    //power
+                    case 5:
+                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*7" + (int) newValue);
+//                        nodeMsg.sentData = ("*7" + (int) newValue);
+                        break;
+                    // temp type
+                    case 6:
+                        nodeMsg.sentData = ("*1SS*2" + Node_Model_Name.SWTR.toString() + "*8" + (int) newValue + "#");
+//                        nodeMsg.sentData = ("*8" + (int) newValue + "#");
                         break;
                 }
             }
@@ -3087,11 +3188,11 @@ public class AllNodes {
 
             case Node_Type.Thermostatic:
                 if (newNode.name.length() == 0)
-                    newNode.name = G.T.getSentence(1109); //// TODO: 5/2/2017 name needs to be changed
+                    newNode.name = G.T.getSentence(1109);
                 newNode.status = 1;
                 newNode.parentNodeId = parentNodeId;
                 newNode.iD = (int) Database.Node.insert(newNode);
-                for (int i = 0; i < 7; i++) { // 0 = low, 1 = medium, 2 = height, 4=, damaye mohit, 5= set point, 6= power, 7 = hot&cold
+                for (int i = 0; i < 7; i++) { // 0 = low, 1 = medium, 2 = height, 3= damaye mohit, 4= set point, 5= power, 6 = hot&cold
                     sw = new Database.Switch.Struct();
                     sw.code = "" + i;
                     sw.nodeID = newNode.iD;
@@ -3115,6 +3216,12 @@ public class AllNodes {
                             break;
                         case 4:
                             sw.switchType = Switch_Type.Thermo_SetPoint;
+                            break;
+                        case 5:
+                            sw.switchType = Switch_Type.Thermo_POWER;
+                            break;
+                        case 6:
+                            sw.switchType = Switch_Type.Thermo_TEMP_TYPE;
                             break;
                     }
 

@@ -38,6 +38,8 @@ import ir.parsansoft.app.ihs.center.adapters.AdapterListViewMarket;
 import ir.parsansoft.app.ihs.center.adapters.AdapterScenarioNotifyMobiles;
 import ir.parsansoft.app.ihs.center.adapters.AdapterScenarioNotifyMobiles.onDeleteItem;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class ActivityWelcome10Mobile extends ActivityWizard {
 
     private CO_f_setting_mobile fo;
@@ -158,12 +160,14 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                     startlisten();
                 } catch (IOException e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 } finally {
                     try {
                         G.log("Socket listenner is closing ...");
                         mobilesSocketListener.close();
                     } catch (Exception e2) {
                         G.printStackTrace(e2);
+                        sendCrashLog(e2, "", Thread.currentThread().getStackTrace()[2]);
                     }
                 }
             }
@@ -211,6 +215,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                         } catch (Exception e) {
                             G.log(e.getMessage());
                             G.printStackTrace(e);
+                            sendCrashLog(e, "دریافت اطلاعات از بارکد", Thread.currentThread().getStackTrace()[2]);
                             return;
                         }
                     }
@@ -243,6 +248,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                     newMobile = Database.Mobiles.select("SerialNumber like '" + newMobileSerial + "'")[0];
                 } catch (Exception e) {
                     newMobile = null;
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                 }
 
                 if (newMobile != null) {
@@ -286,6 +292,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                         socket.close();
                     } catch (IOException e) {
                         G.printStackTrace(e);
+                        sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                     }
                     startServer();
                 } else {
@@ -294,7 +301,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
             }
         } catch (JSONException e) {
             G.printStackTrace(e);
-            //TODO: progress is cancelled ...
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
         }
     }
 
@@ -309,6 +316,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                 return false;
         } catch (IOException e) {
             e.printStackTrace();
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             return false;
         }
         return true;
@@ -325,8 +333,10 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
         try {
 //            socket.getOutputStream().write(data.getBytes("UTF-8"));
             socket.getOutputStream().write((data).getBytes());
+
         } catch (IOException e) {
             G.printStackTrace(e);
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             return false;
         }
         return true;
@@ -430,6 +440,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                     }
                 } catch (Exception e) {
                     G.printStackTrace(e);
+                    sendCrashLog(e, "دریافت اطلاعات دریافت شده از بارکد", Thread.currentThread().getStackTrace()[2]);
                 }
 
             }
@@ -469,6 +480,7 @@ public class ActivityWelcome10Mobile extends ActivityWizard {
                 mobilesSocketListener.close();
         } catch (IOException e) {
             G.printStackTrace(e);
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
         }
     }
 

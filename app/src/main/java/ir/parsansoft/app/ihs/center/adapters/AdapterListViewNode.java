@@ -27,7 +27,7 @@ public class AdapterListViewNode extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View row;
 
 //        if (convertView == null) {
@@ -77,8 +77,6 @@ public class AdapterListViewNode extends BaseAdapter {
 //            row = convertView;
 //        }
 
-
-//        G.log("Scroll: " + gridView.getFirstVisiblePosition());
 
 //        if (row != null) {
         G.log("Node ID: " + nodes[position].iD);

@@ -14,13 +14,18 @@ import ir.parsansoft.app.ihs.center.SysLog.LogOperator;
 
 public class ScenarioBP {
 
-
+    /**
+     * ejra shodane scenatio tavasote har kodoom az pish shart ha dar in class
+     * piade sazi shode
+     */
     public ScenarioBP() {
         // initialize scenario background parameters....
         G.log("initialize scenario background parameters....");
         resetTimeBase();
     }
 
+    // alarm mgr hame scenario ha set mishe
+    // oonai k bar asase time set shode bashan, zamaneshoon shoroo mishe
     public void resetTimeBase() {
         G.log("Resetting Time Base Scenario BG !");
         Database.Scenario.Struct[] allTimedScenarios = Database.Scenario.select("OpTimeBase=1 AND Active=1");
@@ -32,12 +37,12 @@ public class ScenarioBP {
             int currentMilli = c.get(Calendar.MILLISECOND);
             long todayTimeInMillis = (currentHour * 3600 + currentMinute * 60 + currentSecond) * 1000 + currentMilli;
 
-            for (int i = 0; i < allTimedScenarios.length; i++) {
-                G.log("set alarm for scenario :" + allTimedScenarios[i].name);
+            for (Database.Scenario.Struct allTimedScenario : allTimedScenarios) {
+                G.log("set alarm for scenario :" + allTimedScenario.name);
                 String t[];
                 int h;
                 int m;
-                t = allTimedScenarios[i].startHour.split(":");
+                t = allTimedScenario.startHour.split(":");
                 h = Integer.parseInt(t[0]);
                 m = Integer.parseInt(t[1]);
                 long scenarioTimeInMillis = (h * 3600 + m * 60) * 1000;
@@ -49,7 +54,8 @@ public class ScenarioBP {
                 } else {
                     nextFirstRunTime = System.currentTimeMillis() + AlarmManager.INTERVAL_DAY - todayTimeInMillis + scenarioTimeInMillis;
                 }
-                G.alarmScenario.SetRepeatAlarm(allTimedScenarios[i].iD, "" + allTimedScenarios[i].iD, nextFirstRunTime, AlarmManager.INTERVAL_DAY);
+                //alarm tanzim mishe k morataban bar asase zaman bandi scenario ejra beshe
+                G.alarmScenario.SetRepeatAlarm(allTimedScenario.iD, "" + allTimedScenario.iD, nextFirstRunTime, AlarmManager.INTERVAL_DAY);
             }
         }
     }

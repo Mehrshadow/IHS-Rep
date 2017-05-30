@@ -1468,7 +1468,7 @@
             به این اطلاعات نیاز خواهید داشت.
         </item>
         <item>807|شما می توانید این اطلاعات را بعدا در منوی تنظیمات نیز مشاهده نمایید.</item>
-        <item>808|برای ورود به وب سایت خانه هوشمند می توانید از این اطلاعات استفاده نمایید. (در صورتی که کلمه عبورر خود
+        <item>808|برای ورود به وب سایت خانه هوشمند می توانید از این اطلاعات استفاده نمایید. (در صورتی که کلمه عبور خود
             را در وب سایت تغییر داده باشید دیگر این کلمه عبور معتبر نمی باشد)
         </item>
         <item>809|دستگاه های زیر از کار افتاده اند. لطفا اتصال برق یا ارتباط شبکه آنها را بررسی نمایید.</item>
@@ -1504,7 +1504,7 @@
         <item>839|دمای کنونی: </item>
         <item>840|تاریخ انقضای کلید API: </item>
         <item>841|شهر: </item>
-        <item>842|اطلاعات قابل دریافت نیست. لطفا صحت کلید API را بررسی بفرمایید</item>
+        <item>842|اطلاعات قابل دریافت نیست. لطفا دسترسی اینترنت و صحت کلید API را بررسی بفرمایید</item>
         <item>843|آب و هوا</item>
         <item>844|لطفا تاریخ و ساعت دستگاه را به روز رسانی کنید</item>
         <item>845|لطفا عدد بزرگتر از 100 وارد کنید</item>
@@ -1578,6 +1578,8 @@
         <item>120603|دور تند</item>
         <item>120604|دمای فعلی</item>
         <item>120605|دمای دلخواه</item>
+        <item>120606|پاور</item>
+        <item>120607|نوع دما</item>
 
     </string-array>
     <string-array name="translation_Tr">
@@ -2278,7 +2280,8 @@
     <dimen name="item_touch_helper_max_drag_scroll_per_frame">20dp</dimen>
     <dimen name="item_touch_helper_swipe_escape_max_velocity">800dp</dimen>
     <dimen name="item_touch_helper_swipe_escape_velocity">120dp</dimen>
-    <dimen name="node_height">300dp</dimen>
+    <dimen name="node_height">240dp</dimen>
+    <dimen name="node_width">170dp</dimen>
     <dimen name="notification_large_icon_height">64dp</dimen>
     <dimen name="notification_large_icon_width">64dp</dimen>
     <dimen name="notification_subtext_size">12dp</dimen>
@@ -2327,7 +2330,7 @@
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="bottom_sheet_behavior" translatable="false">android.support.design.widget.BottomSheetBehavior</string>
     <string name="character_counter_pattern" translatable="false">%1$d / %2$d</string>
-    <string name="com.crashlytics.android.build_id" ns1:ignore="UnusedResources,TypographyDashes" translatable="false">2287b313-4809-4123-bc7f-a9e1cfeb96b4</string>
+    <string name="com.crashlytics.android.build_id" ns1:ignore="UnusedResources,TypographyDashes" translatable="false">7c2f2c4e-a8e7-490e-88f3-13596717b654</string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable</string>
     <string msgid="227660514972886228" name="common_google_play_services_enable_text"><ns2:g id="app_name">%1$s</ns2:g> won\'t work unless you enable Google Play services.</string>
     <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>

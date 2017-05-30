@@ -19,6 +19,8 @@ import java.util.List;
 import ir.parsansoft.app.ihs.center.adapters.AdapterFakeNodeSwitches;
 import ir.parsansoft.app.ihs.center.adapters.AdapterListViewNode;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
 
     AllViews.CO_d_section_add_node_NodeType mAdd_node_nodeType;
@@ -105,8 +107,7 @@ public class ActivityAddNode_IoMadule_NodeType extends ActivityEnhanced {
         }
 
         insertFakeNodeToDb(availablePorts);
-refreshNode();
-
+        refreshNode();
 
         mAdd_node_nodeType.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,33 +126,36 @@ refreshNode();
         mAdd_node_nodeType.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent fw3 = new Intent(G.currentActivity, ActivityAddNode_IoModule_Device_Select.class);
-                fw3.putExtra("DEVICE_NODE_ID", deviceID);
-                fw3.putExtra("IO_NODE_ID", ioModuleID);
-                fw3.putExtra("Delete_Last_Node", true);
-                Animation.doAnimation(Animation.Animation_Types.FADE_SLIDE_LEFTRIGHT_LEFT);
+                try {
+                    Intent fw3 = new Intent(G.currentActivity, ActivityAddNode_IoModule_Device_Select.class);
+                    fw3.putExtra("DEVICE_NODE_ID", deviceID);
+                    fw3.putExtra("IO_NODE_ID", ioModuleID);
+                    fw3.putExtra("Delete_Last_Node", true);
+                    Animation.doAnimation(Animation.Animation_Types.FADE_SLIDE_LEFTRIGHT_LEFT);
 
-                G.nodeCommunication.allNodes.get(deviceID).distroyNode();
-                G.nodeCommunication.allNodes.remove(deviceID);
+                    G.nodeCommunication.allNodes.get(deviceID).distroyNode();
+                    G.nodeCommunication.allNodes.remove(deviceID);
 
-                devices = new Database.Node.Struct[0];
+                    devices = new Database.Node.Struct[0];
 
-                Database.Node.delete(deviceID);
-                Database.Switch.delete("nodeID=" + deviceID);
+                    Database.Node.delete(deviceID);
+                    Database.Switch.delete("nodeID=" + deviceID);
 
-                refreshNode();
+                    refreshNode();
 
-                NetMessage netMessage = new NetMessage();
-                netMessage.data = newNode.getNodeDataJson();
-                netMessage.action = NetMessage.Delete;
-                netMessage.type = NetMessage.NodeData;
-                netMessage.typeName = NetMessage.NetMessageType.NodeData;
-                netMessage.messageID = netMessage.save();
-                G.mobileCommunication.sendMessage(netMessage);
-                G.server.sendMessage(netMessage);
+                    NetMessage netMessage = new NetMessage();
+                    netMessage.data = newNode.getNodeDataJson();
+                    netMessage.action = NetMessage.Delete;
+                    netMessage.type = NetMessage.NodeData;
+                    netMessage.typeName = NetMessage.NetMessageType.NodeData;
+                    netMessage.messageID = netMessage.save();
+                    G.mobileCommunication.sendMessage(netMessage);
+                    G.server.sendMessage(netMessage);
 
-
-                G.currentActivity.startActivity(fw3);
+                    G.currentActivity.startActivity(fw3);
+                } catch (Exception e) {
+                    sendCrashLog(e, "دکمه قبلی در اضافه کردن دستگاه خروجی به IO", Thread.currentThread().getStackTrace()[2]);
+                }
                 finish();
 
             }
@@ -159,26 +163,30 @@ refreshNode();
         mAdd_node_nodeType.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                try {
+                    Animation.doAnimation(Animation.Animation_Types.FADE);
 
-                Animation.doAnimation(Animation.Animation_Types.FADE);
+                    G.nodeCommunication.allNodes.get(deviceID).distroyNode();
+                    G.nodeCommunication.allNodes.remove(deviceID);
 
-                G.nodeCommunication.allNodes.get(deviceID).distroyNode();
-                G.nodeCommunication.allNodes.remove(deviceID);
-                Database.Node.delete(deviceID);
-                Database.Switch.delete("nodeID=" + deviceID);
+                    devices = new Database.Node.Struct[0];
 
-                adapterNodeSwitches.notifyDataSetChanged();
-                grdListAdapter.notifyDataSetChanged();
+                    Database.Node.delete(deviceID);
+                    Database.Switch.delete("nodeID=" + deviceID);
 
-                NetMessage netMessage = new NetMessage();
-                netMessage.data = newNode.getNodeDataJson();
-                netMessage.action = NetMessage.Delete;
-                netMessage.type = NetMessage.NodeData;
-                netMessage.typeName = NetMessage.NetMessageType.NodeData;
-                netMessage.messageID = netMessage.save();
-                G.mobileCommunication.sendMessage(netMessage);
-                G.server.sendMessage(netMessage);
+                    refreshNode();
 
+                    NetMessage netMessage = new NetMessage();
+                    netMessage.data = newNode.getNodeDataJson();
+                    netMessage.action = NetMessage.Delete;
+                    netMessage.type = NetMessage.NodeData;
+                    netMessage.typeName = NetMessage.NetMessageType.NodeData;
+                    netMessage.messageID = netMessage.save();
+                    G.mobileCommunication.sendMessage(netMessage);
+                    G.server.sendMessage(netMessage);
+                } catch (Exception e) {
+                    sendCrashLog(e, "دکمه انصراف در اضافه کردن دستگاه خروجی به IO", Thread.currentThread().getStackTrace()[2]);
+                }
                 finish();
             }
         });
@@ -188,7 +196,7 @@ refreshNode();
     private void refreshNode() {
         grdListAdapter = new AdapterListViewNode(G.currentActivity, devices, false);
         mAdd_node_nodeType.lstNode.setAdapter(grdListAdapter);
-        switches = Database.Switch.select("nodeID = " + deviceID);
+        switches = Database.Switch.select("nodeID = " + deviceID + " AND switchType not in (" + AllNodes.Switch_Type.CURTAIN_STATUS_Stop + ")");
         adapterNodeSwitches = new AdapterFakeNodeSwitches(this, switches, spinnerPorts);
         mAdd_node_nodeType.lstNodeSwitches.setAdapter(adapterNodeSwitches);
     }
@@ -217,7 +225,8 @@ refreshNode();
             Database.Node.Struct[] nodes = Database.Node.select("iP='" + ioNode.get(0).iP + "'");
             ArrayList<Database.Switch.Struct> fakeswitches = new ArrayList<>();
             for (int i = 0; i < nodes.length; i++) {
-                Database.Switch.Struct[] switches = Database.Switch.select("isIOModuleSwitch=" + 1 + " AND nodeID = " + nodes[i].iD);
+                Database.Switch.Struct[] switches = Database.Switch.select("isIOModuleSwitch=" + 1 + " AND nodeID = " + nodes[i].iD
+                        + " AND switchType not in (" + AllNodes.Switch_Type.CURTAIN_STATUS_Stop + ")");
 
                 if (switches != null) {
                     for (int j = 0; j < switches.length; j++) {
@@ -236,7 +245,9 @@ refreshNode();
 
             return spinnerPorts;
         } catch (Exception e) {
-            e.printStackTrace();
+            G.printStackTrace(e);
+
+            sendCrashLog(e, "ثبت پورت در اضافه کردن دستگاه خروجی به IO", Thread.currentThread().getStackTrace()[2]);
 
             return null;
         }
@@ -267,9 +278,15 @@ refreshNode();
 
         for (int i = 0; i < switches.length; i++) {
             switches[i].IOModulePort = Integer.parseInt(availablePorts.get(i));
+
+            if (i == 2 && newNode.nodeTypeID == AllNodes.Node_Type.CURTAIN_SWITCH) {
+
+                switches[i].IOModulePort = 0;
+            }
+
             Database.Switch.edit(switches[i]);
         }
-    }//
+    }
 
     private boolean saveForm() {
         Database.Switch.Struct[] switchItems = adapterNodeSwitches.getSwitchItems();
@@ -332,27 +349,30 @@ refreshNode();
             nm.type = NetMessage.SwitchData;
             JSONArray ja = new JSONArray();
             try {
-//                Database.Switch.Struct[] switchValues = Database.Switch.select("nodeID = " + deviceID);
-                for (int i = 0; i < switchItems.length; i++) {
-//                    if (switchValues != null) {
-//                        switchItems[i].name = switchValues[i].name;
-//                    }
-//                switchItems[i].IOModulePort = switchValues[i].IOModulePort;
-                    Database.Switch.edit(switchItems[i]);
+                switches = Database.Switch.select("nodeID = " + deviceID);
+
+                for (int i = 0; i < switches.length; i++) {
+
+                    // dar node parde, IOModulePorte switch 2 yani motevaghef ro dasti 0 mikonim
+                    // choon parde 3 switche shode ama faghat 2 switch ro baraye ertebat ba io niaz darim
 
                     JSONObject jo = new JSONObject();
 
-                    jo.put("ID", switchItems[i].iD);
-                    jo.put("Name", switchItems[i].name);
-                    jo.put("Code", switchItems[i].code);
-                    jo.put("Value", switchItems[i].value);
-                    jo.put("NodeID", switchItems[i].nodeID);
-                    jo.put("IOModulePort", switchItems[i].IOModulePort);
+                    jo.put("ID", switches[i].iD);
+                    jo.put("Name", switches[i].name);
+                    jo.put("Code", switches[i].code);
+                    jo.put("Value", switches[i].value);
+                    jo.put("NodeID", switches[i].nodeID);
+                    jo.put("IOModulePort", switches[i].IOModulePort);
                     ja.put(jo);
                 }
             } catch (JSONException e) {
                 G.printStackTrace(e);
+
+                sendCrashLog(e, "ساخت json object", Thread.currentThread().getStackTrace()[2]);
             }
+
+
             G.nodeCommunication.allNodes.get(newNode.iD).refreshNodeStruct();
             nm.data = ja.toString();
             nm.messageID = nm.save();

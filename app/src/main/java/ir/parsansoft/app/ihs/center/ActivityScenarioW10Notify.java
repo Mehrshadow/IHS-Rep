@@ -24,15 +24,15 @@ import ir.parsansoft.app.ihs.center.adapters.AdapterScenarioNotifyMobiles.onDele
 
 public class ActivityScenarioW10Notify extends ActivityEnhanced {
 
-    private CO_f_senario_w9              fo;
-    Activity                             form;
-    Database.Scenario.Struct             scenario     = null;
+    private CO_f_senario_w9 fo;
+    Activity form;
+    Database.Scenario.Struct scenario = null;
 
-    Database.Mobiles.Struct[]            mobiles;
-    ArrayList<Integer>                   mobilesIDs   = new ArrayList<Integer>();
-    ArrayList<Integer>                   allMobileIDs = new ArrayList<Integer>();
+    Database.Mobiles.Struct[] mobiles;
+    ArrayList<Integer> mobilesIDs = new ArrayList<Integer>();
+    ArrayList<Integer> allMobileIDs = new ArrayList<Integer>();
     private AdapterScenarioNotifyMobiles listAdapter;
-    boolean                              isBusy       = false;
+    boolean isBusy = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
             @Override
             public void onCheckedChanged(CompoundButton view, boolean isChecked) {
                 scenario.opResultNotify = isChecked;
-                if ( !scenario.opResultNotify) {
+                if (!scenario.opResultNotify) {
                     fo.layOptions.setVisibility(View.INVISIBLE);
                 } else {
                     fo.layOptions.setVisibility(View.VISIBLE);
@@ -69,7 +69,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
         fo.btnNext.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if ( !isBusy) {
+                if (!isBusy) {
                     isBusy = true;
                     if (saveForm()) {
                         Intent intent = new Intent(G.currentActivity, ActivityScenarioW11SMS.class);
@@ -77,8 +77,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
                         G.currentActivity.startActivity(intent);
                         Animation.doAnimation(Animation_Types.FADE_SLIDE_LEFTRIGHT_RIGHT);
                         form.finish();
-                    }
-                    else
+                    } else
                         isBusy = false;
 
                 }
@@ -88,7 +87,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
         fo.btnBack.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if ( !isBusy) {
+                if (!isBusy) {
                     isBusy = true;
                     if (saveForm()) {
                         Intent intent = new Intent(G.currentActivity, ActivityScenarioW9Switch.class);
@@ -96,8 +95,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
                         G.currentActivity.startActivity(intent);
                         Animation.doAnimation(Animation_Types.FADE_SLIDE_LEFTRIGHT_LEFT);
                         form.finish();
-                    }
-                    else
+                    } else
                         isBusy = false;
                 }
             }
@@ -127,10 +125,8 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
                 listMobiles = new ArrayList<String>();
                 Database.Mobiles.Struct allMobiles[] = Database.Mobiles.select("");
 
-                if (allMobiles != null)
-                {
-                    for (int i = 0; i < allMobiles.length; i++)
-                    {
+                if (allMobiles != null) {
+                    for (int i = 0; i < allMobiles.length; i++) {
                         allMobileIDs.add(allMobiles[i].iD);
                         listMobiles.add(allMobiles[i].name);
                     }
@@ -145,8 +141,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
                     @Override
                     public void onClick(View arg0) {
                         if (lo.spnItems.getSelectedItemPosition() >= 0) {
-                            if (scenario.notifyMobileIDs.contains(allMobileIDs.get(lo.spnItems.getSelectedItemPosition()) + ";"))
-                            {
+                            if (scenario.notifyMobileIDs.contains(allMobileIDs.get(lo.spnItems.getSelectedItemPosition()) + ";")) {
                                 G.toast(G.T.getSentence(575));
                                 return;
                             }
@@ -166,10 +161,11 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
             }
         });
     }
+
     private void initializeForm() {
         fo.edtAlarmText.setText(scenario.notifyText);
         fo.swhActive.setChecked(scenario.opResultNotify);
-        if ( !scenario.opResultNotify)
+        if (!scenario.opResultNotify)
             fo.layOptions.setVisibility(View.INVISIBLE);
         else
             fo.layOptions.setVisibility(View.VISIBLE);
@@ -212,7 +208,7 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
         scenario.notifyText = fo.edtAlarmText.getText().toString().trim();
         boolean hasActiveResult;
         hasActiveResult = scenario.opResultNotify || scenario.opResultSMS || scenario.opResultSwitch;
-        if ( !hasActiveResult)
+        if (!hasActiveResult)
             scenario.active = false;
         if (scenario.iD == 0) {
             G.log("Add new scenario ... ");
@@ -220,27 +216,25 @@ public class ActivityScenarioW10Notify extends ActivityEnhanced {
             try {
                 scenario.iD = (int) Database.Scenario.insert(scenario);
                 return true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 G.printStackTrace(ex);
                 return false;
             }
-        }
-        else {
+        } else {
             // Edit current state
             scenario.hasEdited = true;
             G.log("Edit the scenario ... sensorNodeId=" + scenario.iD);
             try {
                 Database.Scenario.edit(scenario);
                 return true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 G.printStackTrace(ex);
                 return false;
             }
         }
 
     }
+
     @Override
     public void translateForm() {
         super.translateForm();

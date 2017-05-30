@@ -9,6 +9,8 @@ import ir.parsansoft.app.ihs.center.adapters.AdapterListViewNode;
 import ir.parsansoft.app.ihs.center.adapters.AdapterRoomSpinner;
 import ir.parsansoft.app.ihs.center.adapters.AdapterSectionSpinner;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 /**
  * Created by HaMiD on 2/14/2017.
  */
@@ -66,6 +68,8 @@ public class ActivityAddNode_IoMadule_SelectPlace extends ActivityEnhanced {
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            sendCrashLog(e, "لود کردن اطلاعات spinner ها", Thread.currentThread().getStackTrace()[2]);
         }
         translateForm();
         initializeForm();
@@ -175,6 +179,8 @@ public class ActivityAddNode_IoMadule_SelectPlace extends ActivityEnhanced {
 
                     } catch (Exception e) {
                         G.printStackTrace(e);
+
+                        sendCrashLog(e, "دکمه قبلی در انتخاب مکان برای دستگاه متصل به IO", Thread.currentThread().getStackTrace()[2]);
                     }
 
                     G.currentActivity.startActivity(mAdd_node_input_output);
@@ -194,6 +200,8 @@ public class ActivityAddNode_IoMadule_SelectPlace extends ActivityEnhanced {
                         }
                     } catch (Exception e) {
                         G.printStackTrace(e);
+
+                        sendCrashLog(e, "حذف دستگاه و سوییچ های متصل به آن هنگام زدن دکمه قبلی در زمان اضافه کردن دستگاه به IO", Thread.currentThread().getStackTrace()[2]);
                     }
 
                     G.currentActivity.startActivity(mAdd_node_input_output);
@@ -217,86 +225,95 @@ public class ActivityAddNode_IoMadule_SelectPlace extends ActivityEnhanced {
 
             @Override
             public void onClick(View arg0) {
-                G.log("Going to delete the node :" + nodes[0].iD);
-                final DialogClass dlg = new DialogClass(G.currentActivity);
-                // check if any of scenarios has used this node?
-                Database.Switch.Struct[] sws = Database.Switch.select("nodeID=" + nodes[0].iD);
-                if (sws != null) {
-                    String swsIDs = "";
-                    for (int i = 0; i < sws.length; i++) {
-                        swsIDs += sws[i].iD + ",";
-                    }
-                    swsIDs = swsIDs.substring(0, swsIDs.length() - 1);
-                    Database.PreOperand.Struct snops[] = Database.PreOperand.select("SwitchID IN (" + swsIDs + ")");
-                    Database.Results.Struct snrts[] = Database.Results.select("SwitchID IN (" + swsIDs + ")");
-                    String message = "";
-                    if (snops != null || snrts != null) {
-                        message += G.T.getSentence(826);
-                        if (snops != null) {
-                            G.log("SELECT * FROM T_PreOperand WHERE SwitchID IN (" + swsIDs + ") : affected rows:" + snops.length);
-                            message += "\n";
-                            for (int i = 0; i < snops.length; i++) {
-                                Database.Scenario.Struct snr = Database.Scenario.select(snops[i].scenarioID);
-                                if (snr != null)
-                                    message += "\n" + G.T.getSentence(601) + " : " + snr.name;
-                            }
+                try {
+                    G.log("Going to delete the node :" + nodes[0].iD);
+                    final DialogClass dlg = new DialogClass(G.currentActivity);
+                    // check if any of scenarios has used this node?
+                    Database.Switch.Struct[] sws = Database.Switch.select("nodeID=" + nodes[0].iD);
+                    if (sws != null) {
+                        String swsIDs = "";
+                        for (int i = 0; i < sws.length; i++) {
+                            swsIDs += sws[i].iD + ",";
                         }
-                        if (snrts != null) {
-                            G.log("SELECT * FROM T_Results WHERE SwitchID IN (" + swsIDs + ") : affected rows:" + snrts.length);
-                            message += "\n";
-                            for (int i = 0; i < snrts.length; i++) {
-                                Database.Scenario.Struct snr = Database.Scenario.select(snrts[i].scenarioID);
-                                if (snr != null)
-                                    message += "\n" + G.T.getSentence(612) + " : " + snr.name;
+                        swsIDs = swsIDs.substring(0, swsIDs.length() - 1);
+                        Database.PreOperand.Struct snops[] = Database.PreOperand.select("SwitchID IN (" + swsIDs + ")");
+                        Database.Results.Struct snrts[] = Database.Results.select("SwitchID IN (" + swsIDs + ")");
+                        String message = "";
+                        if (snops != null || snrts != null) {
+                            message += G.T.getSentence(826);
+                            if (snops != null) {
+                                G.log("SELECT * FROM T_PreOperand WHERE SwitchID IN (" + swsIDs + ") : affected rows:" + snops.length);
+                                message += "\n";
+                                for (int i = 0; i < snops.length; i++) {
+                                    Database.Scenario.Struct snr = Database.Scenario.select(snops[i].scenarioID);
+                                    if (snr != null)
+                                        message += "\n" + G.T.getSentence(601) + " : " + snr.name;
+                                }
                             }
+                            if (snrts != null) {
+                                G.log("SELECT * FROM T_Results WHERE SwitchID IN (" + swsIDs + ") : affected rows:" + snrts.length);
+                                message += "\n";
+                                for (int i = 0; i < snrts.length; i++) {
+                                    Database.Scenario.Struct snr = Database.Scenario.select(snrts[i].scenarioID);
+                                    if (snr != null)
+                                        message += "\n" + G.T.getSentence(612) + " : " + snr.name;
+                                }
+                            }
+                            dlg.showOk(G.T.getSentence(228), message);
+                            return;
                         }
-                        dlg.showOk(G.T.getSentence(228), message);
-                        return;
                     }
+
+
+                    dlg.setOnYesNoListener(new DialogClass.YesNoListener() {
+                        @Override
+                        public void yesClick() {
+                            // going to delete selected node and its switch
+                            //  Send message to server and local Mobiles
+                            try {
+                                NetMessage netMessage = new NetMessage();
+                                netMessage.data = nodes[0].getNodeDataJson();
+                                netMessage.action = NetMessage.Delete;
+                                netMessage.type = NetMessage.NodeData;
+                                netMessage.typeName = NetMessage.NetMessageType.NodeData;
+                                netMessage.messageID = netMessage.save();
+                                G.mobileCommunication.sendMessage(netMessage);
+                                G.server.sendMessage(netMessage);
+
+                                NetMessage netMessage2 = new NetMessage();
+                                netMessage2.data = nodes[0].getNodeSwitchesDataJson();
+                                netMessage2.action = NetMessage.Delete;
+                                netMessage2.type = NetMessage.SwitchData;
+                                netMessage2.typeName = NetMessage.NetMessageType.SwitchData;
+                                netMessage2.messageID = netMessage2.save();
+                                G.mobileCommunication.sendMessage(netMessage2);
+                                G.server.sendMessage(netMessage2);
+
+                                SysLog.log("Device :" + nodes[0].name + " Deleted.", SysLog.LogType.DATA_CHANGE, SysLog.LogOperator.NODE, nodes[0].iD);
+
+                                G.nodeCommunication.allNodes.get(nodes[0].iD).distroyNode();
+                                G.nodeCommunication.allNodes.remove(nodes[0].iD);
+                                Database.Node.delete(nodes[0].iD);
+                                Database.Switch.delete("nodeID=" + nodes[0].iD);
+                            } catch (Exception e) {
+                                sendCrashLog(e, "دکمه بله در تایید حذف دستگاه متصل به IO در انتخاب مکان برای دستگاه متصل به IO", Thread.currentThread().getStackTrace()[2]);
+                            }
+                            finish();
+                        }
+
+                        @Override
+                        public void noClick() {
+                            dlg.dissmiss();
+                        }
+                    });
+                    dlg.showYesNo(G.T.getSentence(228), G.T.getSentence(229));
                 }
-
-
-                dlg.setOnYesNoListener(new DialogClass.YesNoListener() {
-                    @Override
-                    public void yesClick() {
-                        // going to delete selected node and its switch
-                        //  Send message to server and local Mobiles
-                        NetMessage netMessage = new NetMessage();
-                        netMessage.data = nodes[0].getNodeDataJson();
-                        netMessage.action = NetMessage.Delete;
-                        netMessage.type = NetMessage.NodeData;
-                        netMessage.typeName = NetMessage.NetMessageType.NodeData;
-                        netMessage.messageID = netMessage.save();
-                        G.mobileCommunication.sendMessage(netMessage);
-                        G.server.sendMessage(netMessage);
-
-                        NetMessage netMessage2 = new NetMessage();
-                        netMessage2.data = nodes[0].getNodeSwitchesDataJson();
-                        netMessage2.action = NetMessage.Delete;
-                        netMessage2.type = NetMessage.SwitchData;
-                        netMessage2.typeName = NetMessage.NetMessageType.SwitchData;
-                        netMessage2.messageID = netMessage2.save();
-                        G.mobileCommunication.sendMessage(netMessage2);
-                        G.server.sendMessage(netMessage2);
-
-                        SysLog.log("Device :" + nodes[0].name + " Deleted.", SysLog.LogType.DATA_CHANGE, SysLog.LogOperator.NODE, nodes[0].iD);
-
-                        G.nodeCommunication.allNodes.get(nodes[0].iD).distroyNode();
-                        G.nodeCommunication.allNodes.remove(nodes[0].iD);
-                        Database.Node.delete(nodes[0].iD);
-                        Database.Switch.delete("nodeID=" + nodes[0].iD);
-                        finish();
-                    }
-
-                    @Override
-                    public void noClick() {
-                        dlg.dissmiss();
-                    }
-                });
-                dlg.showYesNo(G.T.getSentence(228), G.T.getSentence(229));
-
+                catch (Exception e){
+                    sendCrashLog(e, "دکمه حذف در انتخاب مکان برای دستگاه متصل به IO", Thread.currentThread().getStackTrace()[2]);
+                }
             }
         });
+
     }
 
     Database.Section.Struct[] sections;
@@ -351,8 +368,6 @@ public class ActivityAddNode_IoMadule_SelectPlace extends ActivityEnhanced {
 
             }
         });
-
-
     }
 
     @Override
@@ -366,7 +381,6 @@ public class ActivityAddNode_IoMadule_SelectPlace extends ActivityEnhanced {
         fw2.btnBack.setText(G.T.getSentence(104));
         fw2.txtTitle.setText(G.T.getSentence(227));
         fw2.btnDelete.setText(G.T.getSentence(106));
-//        fw2.checkBoxMyHouse.setText(G.T.getSentence(849));
         fw2.lblMyHouse.setText(G.T.getSentence(849));
     }
 

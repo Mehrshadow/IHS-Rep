@@ -10,6 +10,8 @@ import android.os.Bundle;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class BroadcastReciverAlarmManager extends BroadcastReceiver {
 
     private final static String DES_TIME = "DESCRIPTION";
@@ -20,19 +22,34 @@ public class BroadcastReciverAlarmManager extends BroadcastReceiver {
         context = G.context;
     }
 
-
+    /**
+     * in method zamani ejra mishe k zamane ejraye scenarioi
+     * k bar asase zaman time bandi shode berese
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         //You can do the processing here update the widget/remote views.
         //        G.log("The Alarm Manager has ran the ring !");
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            int requestCode = extras.getInt(REQ_TIME, -1);
+        try {
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                int requestCode = extras.getInt(REQ_TIME, -1);
 
-            String description = extras.getString(DES_TIME, "");
-            //            G.log("requestCode : " + requestCode);
-            //            G.log("description : " + description);
-            G.scenarioBP.runByTime(requestCode);
+                String description = extras.getString(DES_TIME, "");
+                if (description.equals("delay")) {
+                    Database.Scenario.Struct scenario = Database.Scenario.select(requestCode);
+                    G.scenarioBP.runScenario(scenario);
+
+                    return;
+                }
+
+                // niaz be check kardane sharte khasi baraye ejra nadarim
+                // ghablan hame shart ha check shodan
+                G.scenarioBP.runByTime(requestCode);
+            }
+        } catch (Exception e) {
+            G.printStackTrace(e);
+            sendCrashLog(e, "تایمر تنظیم شده یا تاخیر ایجاد شده در سناریو به مشکل بر خورد!", Thread.currentThread().getStackTrace()[2]);
         }
     }
 
@@ -63,6 +80,9 @@ public class BroadcastReciverAlarmManager extends BroadcastReceiver {
         alarmManager.cancel(sender);
     }
 
+    /**
+     * methode set baraye in ast k faghat 1 bar ejra shavad va dg repeat nemishe
+     */
     public void setOnetimeTimer(int requestCode, String description, long RepeatTimeInMillis) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, BroadcastReciverAlarmManager.class);

@@ -25,6 +25,7 @@ import ir.parsansoft.app.ihs.center.SysLog.LogOperator;
 import ir.parsansoft.app.ihs.center.SysLog.LogType;
 
 import static ir.parsansoft.app.ihs.center.G.T;
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
 
 
 public class ActivityAddNode_w1 extends ActivityEnhanced {
@@ -140,6 +141,7 @@ public class ActivityAddNode_w1 extends ActivityEnhanced {
                 if (!prepairNetworkParameters()) {
                     waiteDLGWithCancel.dissmiss();
                     msgDLG.showOk(T.getSentence(201), T.getSentence(215));
+
                     return;
                 }
                 if (G.mobileCommunication != null) {
@@ -254,6 +256,9 @@ public class ActivityAddNode_w1 extends ActivityEnhanced {
                             } catch (Exception e) {
                                 waiteDLGWithCancel.setDialogTitle(T.getSentence(216));
                                 waiteDLGWithCancel.setDialogText(T.getSentence(209));
+
+                                sendCrashLog(e, "متد execute command در learn کردن کلید", Thread.currentThread().getStackTrace()[2]);
+
                                 G.printStackTrace(e);
                                 continue;
                             }
@@ -351,7 +356,6 @@ public class ActivityAddNode_w1 extends ActivityEnhanced {
 
                 msgDLG.dissmiss();
                 waiteDLGWithCancel.dissmiss();
-
             }
 
             /****************** Jahanbin **************************/
@@ -388,7 +392,9 @@ public class ActivityAddNode_w1 extends ActivityEnhanced {
                     Database.Node.delete(oldNode.iD);
                     Database.Switch.delete("NodeID=" + oldNode.iD);
                 } catch (Exception e) {
-                    G.log(e.getMessage());
+                    G.printStackTrace(e);
+
+                    sendCrashLog(e, "حذف دستگاه قبلی در زمان جایگزین کردن دستگاه لرن شده", Thread.currentThread().getStackTrace()[2]);
                 }
                 //--------------------------Create new node ------------------------
                 int newNodeID = AllNodes.AddNewNode(newNode, 0, true, 0); // 4th model is just for sensor
@@ -475,12 +481,17 @@ public class ActivityAddNode_w1 extends ActivityEnhanced {
                         return data + initialization;
                     } catch (IOException e) {
                         G.printStackTrace(e);
+
+                        sendCrashLog(e, "خطا در سوکت زدن به دستگاه برای لرن کردن آن", Thread.currentThread().getStackTrace()[2]);
+
                         G.log("Error executeCommand :" + e.getMessage());
                         if (!socket.isClosed())
                             try {
                                 socket.close();
                             } catch (IOException e1) {
                                 G.printStackTrace(e1);
+
+                                sendCrashLog(e, "سوکت وجود ندارد! ( زمان لرن کلید)", Thread.currentThread().getStackTrace()[2]);
                             }
                     }
                 }
@@ -522,6 +533,10 @@ public class ActivityAddNode_w1 extends ActivityEnhanced {
                     t.interrupt();
                 }
                 waiteDLGWithCancel.dissmiss();
+
+                startActivity(new Intent(ActivityAddNode_w1.this, ActivityAddNode_w1.class));
+                overridePendingTransition(R.anim.fast_change_activity_show, R.anim.fast_change_activity_hide);
+                finish();
             }
         });
 

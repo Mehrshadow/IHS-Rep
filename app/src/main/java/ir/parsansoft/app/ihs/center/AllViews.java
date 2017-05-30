@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -877,6 +878,72 @@ public class AllViews {
         }
     }
 
+    public static final class CO_d_simple_spinner_edit_text {
+        public LinearLayout layOptions;
+        public TextView txtTitle;
+        public TextView txtBody;
+        public Spinner spnItems;
+        public LinearLayout layNavigation;
+        public Button btnNegative;
+        public TextView textView1;
+        public Button btnPositive;
+        public EditText et_delay_timer;
+
+        public CO_d_simple_spinner_edit_text(Context context) {
+            Activity activity = (Activity) context;
+            layOptions = (LinearLayout) activity.findViewById(R.id.layOptions);
+            txtTitle = (TextView) activity.findViewById(R.id.txtTitle);
+            txtBody = (TextView) activity.findViewById(R.id.txtBody);
+            spnItems = (Spinner) activity.findViewById(R.id.spnItems);
+            layNavigation = (LinearLayout) activity.findViewById(R.id.layNavigation);
+            btnNegative = (Button) activity.findViewById(R.id.btnNegative);
+            textView1 = (TextView) activity.findViewById(R.id.txtLanguage);
+            btnPositive = (Button) activity.findViewById(R.id.btnPositive);
+            et_delay_timer = (EditText) activity.findViewById(R.id.et_delay);
+            intializeVariables();
+
+        }
+
+        public CO_d_simple_spinner_edit_text(Dialog dlg) {
+            layOptions = (LinearLayout) dlg.findViewById(R.id.layOptions);
+            txtTitle = (TextView) dlg.findViewById(R.id.txtTitle);
+            txtBody = (TextView) dlg.findViewById(R.id.txtBody);
+            spnItems = (Spinner) dlg.findViewById(R.id.spnItems);
+            layNavigation = (LinearLayout) dlg.findViewById(R.id.layNavigation);
+            btnNegative = (Button) dlg.findViewById(R.id.btnNegative);
+            textView1 = (TextView) dlg.findViewById(R.id.txtLanguage);
+            btnPositive = (Button) dlg.findViewById(R.id.btnPositive);
+            et_delay_timer = (EditText) dlg.findViewById(R.id.et_delay);
+            intializeVariables();
+
+        }
+
+        public CO_d_simple_spinner_edit_text(View view) {
+            layOptions = (LinearLayout) view.findViewById(R.id.layOptions);
+            txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+            txtBody = (TextView) view.findViewById(R.id.txtBody);
+            spnItems = (Spinner) view.findViewById(R.id.spnItems);
+            layNavigation = (LinearLayout) view.findViewById(R.id.layNavigation);
+            btnNegative = (Button) view.findViewById(R.id.btnNegative);
+            textView1 = (TextView) view.findViewById(R.id.txtLanguage);
+            btnPositive = (Button) view.findViewById(R.id.btnPositive);
+            et_delay_timer = (EditText) view.findViewById(R.id.et_delay);
+            intializeVariables();
+
+        }
+
+        private void intializeVariables() {
+            //            txtTitle.setText(G.T.getSentence(148901));
+            //            UiEditorHelper.editUiText(txtTitle, 148901);
+            //            txtBody.setText(G.T.getSentence(148902));
+            //            UiEditorHelper.editUiText(txtBody, 148902);
+            //            btnNegative.setText(G.T.getSentence(148903));
+            //            UiEditorHelper.editUiText(btnNegative, 148903);
+            //            btnPositive.setText(G.T.getSentence(148904));
+            //            UiEditorHelper.editUiText(btnPositive, 148904);
+        }
+    }
+
     public static final class CO_f_favorites {
         public Button btnFavorites;
         public Button btnAll;
@@ -918,7 +985,6 @@ public class AllViews {
         public Button btnAddRoom;
         public Button btnMyHouse;
         public GridView grdNodes;
-        public ImageView btnIOModule;
 
         public CO_f_sections(Context context) {
             Activity activity = (Activity) context;
@@ -928,7 +994,6 @@ public class AllViews {
             btnMyHouse = (Button) activity.findViewById(R.id.btnMyHouse);
             btnAddRoom = (Button) activity.findViewById(R.id.btnAddRoom);
             grdNodes = (GridView) activity.findViewById(R.id.grdNodes);
-            btnIOModule = (ImageView) activity.findViewById(R.id.btn_io_module);
             intializeVariables();
 
         }
@@ -941,7 +1006,6 @@ public class AllViews {
             btnAddRoom = (Button) dlg.findViewById(R.id.btnAddRoom);
             btnMyHouse = (Button) dlg.findViewById(R.id.btn_search);
             grdNodes = (GridView) dlg.findViewById(R.id.grdNodes);
-            btnIOModule = (ImageView) dlg.findViewById(R.id.btn_io_module);
             intializeVariables();
 
         }
@@ -953,7 +1017,6 @@ public class AllViews {
             btnAddRoom = (Button) view.findViewById(R.id.btnAddRoom);
             btnMyHouse = (Button) view.findViewById(R.id.btnMyHouse);
             grdNodes = (GridView) view.findViewById(R.id.grdNodes);
-            btnIOModule = (ImageView) view.findViewById(R.id.btn_io_module);
             intializeVariables();
 
         }
@@ -982,7 +1045,6 @@ public class AllViews {
             btnAddSection = (Button) activity.findViewById(R.id.btnAddSection);
             btnAddRoom = (Button) activity.findViewById(R.id.btnAddRoom);
             grdNodes = (GridView) activity.findViewById(R.id.grdNodes);
-            btnIOModule = (ImageView) activity.findViewById(R.id.btn_io_module);
 
         }
 
@@ -2685,6 +2747,11 @@ public class AllViews {
         public TextView txtCurrentTemp;
         public TextView txtSetPoint;
         public FrameLayout btnSetPoint;
+        public RelativeLayout btnPower;
+        public RelativeLayout btnTempType;
+        public ImageView imgTempType;
+        public ImageView imgCurrentTemp;
+        public FrameLayout layCurrentTemp;
 
         public CO_l_node_Thermostatic(Context context) {
             Activity activity = (Activity) context;
@@ -2705,6 +2772,11 @@ public class AllViews {
             txtCurrentTemp = (TextView) activity.findViewById(R.id.tv_current_temp);
             txtSetPoint = (TextView) activity.findViewById(R.id.tv_set_point);
             btnSetPoint = (FrameLayout) activity.findViewById(R.id.btnSetPoint);
+            btnPower = (RelativeLayout) activity.findViewById(R.id.btn_power);
+            btnTempType = (RelativeLayout) activity.findViewById(R.id.btn_temp_type);
+            imgTempType = (ImageView) activity.findViewById(R.id.img_temp_type);
+            imgCurrentTemp = (ImageView) activity.findViewById(R.id.img_current_temp);
+            layCurrentTemp = (FrameLayout) activity.findViewById(R.id.lay_current_temp);
             intializeVariables();
         }
 
@@ -2726,6 +2798,11 @@ public class AllViews {
             txtCurrentTemp = (TextView) dlg.findViewById(R.id.tv_current_temp);
             txtSetPoint = (TextView) dlg.findViewById(R.id.tv_set_point);
             btnSetPoint = (FrameLayout) dlg.findViewById(R.id.btnSetPoint);
+            btnPower = (RelativeLayout) dlg.findViewById(R.id.btn_power);
+            btnTempType = (RelativeLayout) dlg.findViewById(R.id.btn_temp_type);
+            imgTempType = (ImageView) dlg.findViewById(R.id.img_temp_type);
+            imgCurrentTemp = (ImageView) dlg.findViewById(R.id.img_current_temp);
+            layCurrentTemp = (FrameLayout) dlg.findViewById(R.id.lay_current_temp);
             intializeVariables();
         }
 
@@ -2747,6 +2824,11 @@ public class AllViews {
             txtCurrentTemp = (TextView) view.findViewById(R.id.tv_current_temp);
             txtSetPoint = (TextView) view.findViewById(R.id.tv_set_point);
             btnSetPoint = (FrameLayout) view.findViewById(R.id.btnSetPoint);
+            btnPower = (RelativeLayout) view.findViewById(R.id.btn_power);
+            btnTempType = (RelativeLayout) view.findViewById(R.id.btn_temp_type);
+            imgTempType = (ImageView) view.findViewById(R.id.img_temp_type);
+            imgCurrentTemp = (ImageView) view.findViewById(R.id.img_current_temp);
+            layCurrentTemp = (FrameLayout) view.findViewById(R.id.lay_current_temp);
             intializeVariables();
         }
 

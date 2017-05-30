@@ -147,7 +147,6 @@ public class Utility {
             }
         }
 
-
         public ArrayList<wifiStation> getWifiStations() {
             int macCount = 0;
             ArrayList<wifiStation> result = null;
@@ -545,8 +544,8 @@ public class Utility {
         }
 
         public static long ipToInt(String iNet) {
-            if(iNet==null)
-                return 0 ;
+            if (iNet == null)
+                return 0;
 
             String[] parts = iNet.split("\\.");
             if (parts.length != 4) {

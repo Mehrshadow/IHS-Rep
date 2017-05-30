@@ -15,6 +15,7 @@ import ir.parsansoft.app.ihs.center.adapters.AdapterIoTypesSpinner;
 import ir.parsansoft.app.ihs.center.adapters.AdapterSensorPortsSpinner;
 
 import static ir.parsansoft.app.ihs.center.Database.Switch.select;
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
 
 
 public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implements CompoundButton.OnCheckedChangeListener {
@@ -113,15 +114,17 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
                 }
             });
 
+            loadPortsSpinner();
+            loadSensorModelSpinner();
+            loadSensorTypeSpinner();
+            translateForm();
+            initializeForm();
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
 
-        loadPortsSpinner();
-        loadSensorModelSpinner();
-        loadSensorTypeSpinner();
-        translateForm();
-        initializeForm();
+            sendCrashLog(e, "متد oncreate در اضافه کردن سنسور به IO", Thread.currentThread().getStackTrace()[2]);
+        }
     }
 
 
@@ -197,9 +200,9 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
             });
         } catch (Exception e) {
             e.printStackTrace();
+
+            sendCrashLog(e, "متد oncreate در اضافه کردن سنسور به IO", Thread.currentThread().getStackTrace()[2]);
         }
-
-
     }
 
     private void loadSensorModelSpinner() {
@@ -232,6 +235,8 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
         }
 
     }
@@ -267,6 +272,8 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
         }
 
     }
@@ -294,7 +301,6 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
         fw.btnNext.setText(G.T.getSentence(103));
         fw.txtTitle.setText(G.T.getSentence(859));
         fw.btnBack.setText(G.T.getSentence(104));
-//        fw.lblMyHouse.setText(G.T.getSentence(849));
     }
 
     @Override
@@ -338,6 +344,7 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             return false;
         }
     }
@@ -349,6 +356,7 @@ public class ActivityAddNode_IOModule_SensorType extends ActivityEnhanced implem
                 ip = IONode[0].iP;
         } catch (Exception e) {
             G.printStackTrace(e);
+            sendCrashLog(e, "دستگاه وجود ندارد!", Thread.currentThread().getStackTrace()[2]);
         }
         newNode = new Database.Node.Struct();
         newNode.nodeTypeID = sensorType;

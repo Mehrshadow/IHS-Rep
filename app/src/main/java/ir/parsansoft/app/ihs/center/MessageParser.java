@@ -9,6 +9,8 @@ import ir.parsansoft.app.ihs.center.NetMessage.NetMessageType;
 import ir.parsansoft.app.ihs.center.SysLog.LogOperator;
 import ir.parsansoft.app.ihs.center.SysLog.LogType;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class MessageParser {
     public static void parseFromMobile(int mobileID, String message) {
         //G.toast("parseFromMobile : Data Recived from mobile :" + mobileID + "\n" + message);
@@ -303,6 +305,7 @@ public class MessageParser {
 
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
 
 
@@ -606,6 +609,7 @@ public class MessageParser {
                 G.log("MessageParser", "Message pareser End." + c);
             } catch (JSONException e) {
                 G.printStackTrace(e);
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         } else {
             G.log("MessageParser", "Data from server is not recognized !\n" + message);

@@ -2,6 +2,8 @@ package ir.parsansoft.app.ihs.center;
 
 import android.util.SparseArray;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class UI {
 
 
@@ -61,6 +63,7 @@ public class UI {
                 G.printStackTrace(e);
                 uics.removeAt(i);
                 i--;
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
     }
@@ -74,6 +77,7 @@ public class UI {
                 G.printStackTrace(e);
                 uics.removeAt(i);
                 i--;
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
     }
@@ -90,6 +94,7 @@ public class UI {
                 G.printStackTrace(e);
                 uics.removeAt(i);
                 i--;
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
     }
@@ -104,6 +109,7 @@ public class UI {
                 G.printStackTrace(e);
                 uics.removeAt(i);
                 i--;
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
         }
     }

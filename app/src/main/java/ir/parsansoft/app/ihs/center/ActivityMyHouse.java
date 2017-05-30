@@ -7,6 +7,8 @@ import android.view.View;
 
 import ir.parsansoft.app.ihs.center.adapters.AdapterListViewNode;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 
 public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickListener {
 
@@ -108,16 +110,18 @@ public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickLis
                                     ActivitySections.grdListAdapter.notifyDataSetChanged();
                                 } catch (Exception e) {
                                     G.printStackTrace(e);
+
+                                    sendCrashLog(e, "پاک کردن دستگاه های متصل به IO و نمایش مجدد آن ها پس از زدن دکمه بله حذف IO", Thread.currentThread().getStackTrace()[2]);
+
                                     continue;
                                 }
 
                             }
                         }
 
-
                         //به جای اینکه برای هر موبایل چند پیام حذف نود ارسال شود، یک پیام RefreshData ارسال میکنیم
                         Database.Mobiles.Struct[] mobile = Database.Mobiles.select("");
-                        if (mobile != null && mobile.length == 0) {
+                        if (mobile != null && mobile.length != 0) {
                             for (int i = 0; i < mobile.length; i++) {
                                 String result = Database.generateNewMobileConfiguration(mobile[i]);
                                 // Send message to local Mobile
@@ -144,8 +148,6 @@ public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickLis
                             G.server.sendMessage(netMessage);
                             G.log("MessageParser", "Refresh Data has completed .....................");
                         }
-
-
                         finish();
                     }
 
@@ -155,7 +157,6 @@ public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickLis
                     }
                 });
                 dlg.showYesNo(G.T.getSentence(228), G.T.getSentence(229));
-
 
             }
 
@@ -168,12 +169,9 @@ public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickLis
             fo.btnAddNode.setVisibility(View.VISIBLE);
             fo.btnAddNode.setOnClickListener(this);
             fo.btnBack.setOnClickListener(this);
-        } else
-
-        {
+        } else {
             fo.btnAddNode.setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -197,12 +195,14 @@ public class ActivityMyHouse extends ActivityEnhanced implements View.OnClickLis
             G.log("nodes Size  = " + nodes.length);
         } catch (Exception e) {
             G.printStackTrace(e);
+
+            sendCrashLog(e, "نمایش مجدد لیست دستگاه ها", Thread.currentThread().getStackTrace()[2]);
         }
         grdListAdapter = null;
         if (nodes != null) {
 //            grdListAdapter = new AdapterListViewNode(G.currentActivity, nodes, true, 4);
             grdListAdapter = new AdapterListViewNode(G.currentActivity, nodes, true);
-        }else {
+        } else {
             nodes = new Database.Node.Struct[0];
         }
         fo.grdNodes.setAdapter(grdListAdapter);

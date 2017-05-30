@@ -237,8 +237,10 @@ public class ActivityAddNode_w2 extends ActivityEnhanced {
 
                         G.nodeCommunication.allNodes.get(nodes[0].iD).distroyNode();
                         G.nodeCommunication.allNodes.remove(nodes[0].iD);
+
                         Database.Node.delete(nodes[0].iD);
                         Database.Switch.delete("NodeID=" + nodes[0].iD);
+
                         finish();
                     }
 

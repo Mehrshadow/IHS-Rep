@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 
 public class Database {
 
@@ -46,7 +48,7 @@ public class Database {
             Database.Node.addNewColumn("parentNodeId", "INTEGER", "0", UpdateVersionDetail.add_parentNodeId_Column);
             Database.Switch.addNewColumn("isIOModuleSwitch", "INTEGER", "0", UpdateVersionDetail.add_isIOModuleSwitch_Column);
             Database.Switch.addNewColumn("IOModulePort", "INTEGER", "0", UpdateVersionDetail.add_IOModulePort_Column);
-
+            Database.Scenario.addNewColumn("DelayTime", "INTEGER", "0", UpdateVersionDetail.add_Scenario_delay_time_column);
 
             if (G.dbObject.getVersion() < UpdateVersionDetail.insert_switchType_17) {
                 G.log("Database Version :" + G.dbObject.getVersion());
@@ -66,20 +68,43 @@ public class Database {
                 }
             }
 
+            if (G.dbObject.getVersion() < UpdateVersionDetail.insert_switchType_19) {
+                G.log("Database Version :" + G.dbObject.getVersion());
+                Database.SwitchType.Struct[] select = Database.SwitchType.select("Code=19");
+                if (select == null || select.length == 0) {
+                    Database.SwitchType.insert(19, "", 120606, 1, 0);
+                    G.dbObject.setVersion(UpdateVersionDetail.insert_switchType_19);
+                }
+            }
+
+            if (G.dbObject.getVersion() < UpdateVersionDetail.insert_switchType_20) {
+                G.log("Database Version :" + G.dbObject.getVersion());
+                Database.SwitchType.Struct[] select = Database.SwitchType.select("Code=20");
+                if (select == null || select.length == 0) {
+                    Database.SwitchType.insert(20, "", 120607, 1, 0);
+                    G.dbObject.setVersion(UpdateVersionDetail.insert_switchType_20);
+                }
+            }
+
             Database.ValueType.Struct[] structs = Database.ValueType.select("ID=6");
             if (structs == null || structs.length == 0) {
                 Database.ValueType.insert("Temperature", true, false, 0, 100, 1);
             }
 
 
-            Database.NodeType.Struct[] structs1 = Database.NodeType.select("TypeCode=12");
-            if (structs1 == null || structs1.length == 0) {
+            Database.NodeType.Struct[] nodes = Database.NodeType.select("TypeCode=12");
+            if (nodes == null || nodes.length == 0) {
                 Database.NodeType.insert(12, 1109, "", "", "");
             }
 
+            Database.SwitchType.Struct[] SwitchTypes = Database.SwitchType.select("Code=6");
+            if (SwitchTypes != null) {
+                Database.SwitchType.edit(6, 6, "", 1206, 1, 0);
+            }
 
         } catch (Exception e) {
             G.log(e.getMessage());
+            sendCrashLog(e, "ارتقا پایگاه داده و migration", Thread.currentThread().getStackTrace()[2]);
         }
     }
 
@@ -89,9 +114,11 @@ public class Database {
         public static final int add_IOModulePort_Column = 12;
         public static final int insert_switchType_17 = 13;
         public static final int insert_switchType_18 = 14;
+        public static final int insert_switchType_19 = 15;
+        public static final int insert_switchType_20 = 16;
+        public static final int add_Scenario_delay_time_column = 17;
 
     }
-
 
     public static String generateNewMobileConfiguration(Mobiles.Struct newMobile) {
 
@@ -137,6 +164,7 @@ public class Database {
                     G.printStackTrace(e);
                     G.log("JSON Creation of Rooms faild ....");
                     roomsJSON = null;
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                     break;
                 }
             }
@@ -161,6 +189,7 @@ public class Database {
                     G.printStackTrace(e);
                     G.log("JSON Creation of Nodes faild ....");
                     nodesJSON = null;
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                     break;
                 }
             }
@@ -181,6 +210,7 @@ public class Database {
                     G.printStackTrace(e);
                     G.log("JSON Creation of Switches faild ....");
                     switchesSON = null;
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                     break;
                 }
             }
@@ -217,6 +247,7 @@ public class Database {
                     G.printStackTrace(e);
                     G.log("JSON Creation of Scenario faild ....");
                     scenariosJSON = null;
+                    sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
                     break;
                 }
             }
@@ -226,8 +257,8 @@ public class Database {
         try {
             jo.put("CustomerID", G.setting.customerID);
             jo.put("CustomerName", G.setting.customerName);
-            jo.put("ServerIP", G.setting.serverSocketIP);
-//            jo.put("ServerIP", "192.168.1.14");
+//            jo.put("ServerIP", G.setting.serverSocketIP);
+//            jo.put("ServerIP", "82.99.217.84");
 //            jo.put("ServerPort", G.setting.serverSocketPort);
             jo.put("ServerPort", 8089);
             jo.put("Ver", Utility.getApplicationVersionName());
@@ -243,6 +274,7 @@ public class Database {
             try {
                 lastmessageID = Message.getMax("ID", "").iD;
             } catch (Exception e) {
+                sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
             }
             jo.put("LastMessageID", lastmessageID);
             settingJSON.put(jo);
@@ -250,6 +282,7 @@ public class Database {
             G.printStackTrace(e);
             G.log("JSON Creation of Setting faild ....");
             settingJSON = null;
+            sendCrashLog(e, "", Thread.currentThread().getStackTrace()[2]);
         }
 
         if (sectionsJSON != null && roomsJSON != null && nodesJSON != null && switchesSON != null && scenariosJSON != null && settingJSON != null) {
@@ -1590,7 +1623,6 @@ public class Database {
             Values.put("LearnSecurityKey", myNetworkSetting.learnSecurityKey);
             Values.put("LearnIPAddress", myNetworkSetting.learnIPAddress);
             Values.put("LearnSubnetMask", myNetworkSetting.learnSubnetMask);
-            G.toast("Network setting saved . SSID=" + myNetworkSetting.wiFiSSID);
             return G.dbObject.update("T_NetworkSetting", Values, "ID=" + myNetworkSetting.iD, null);
         }
 
@@ -2326,7 +2358,7 @@ public class Database {
                     G.dbObject.execSQL("ALTER TABLE T_NODE ADD COLUMN " + newColumnName + " " + columnDataType + "NOT NULL DEFAULT '" + defaultValue + "'");
                 }
                 G.dbObject.setVersion(newVersion);
-            }catch (Exception e){
+            } catch (Exception e) {
                 G.printStackTrace(e);
             }
 
@@ -2767,6 +2799,7 @@ public class Database {
             public boolean isStartedOnGPS = false;
             public boolean opPreAND = false;
             public boolean hasEdited = false;
+            public int delayedTime = 0;
 
             public String getDetailsInHTML(int type) {
 
@@ -3493,6 +3526,22 @@ public class Database {
             }
         }
 
+        public static void addNewColumn(String newColumnName, String columnDataType, Object defaultValue, int newVersion) {
+            try {
+                int oldVersion = G.dbObject.getVersion();
+//            int newVersion = G.context.getResources().getInteger(R.integer.database_version);
+
+                if (oldVersion < newVersion) {
+                    G.dbObject.execSQL("ALTER TABLE T_Scenario ADD COLUMN " + newColumnName + " " + columnDataType + "NOT NULL DEFAULT '" + defaultValue + "'");
+                }
+                G.dbObject.setVersion(newVersion);
+            } catch (Exception e) {
+                G.printStackTrace(e);
+            }
+
+        }
+
+
         public static long insert(Struct myScenario) {
             ContentValues Values = new ContentValues();
             Values.put("Name", myScenario.name);
@@ -3524,10 +3573,11 @@ public class Database {
             Values.put("OpPreAND", myScenario.opPreAND);
             Values.put("isStartedOnGPS", myScenario.isStartedOnGPS);
             Values.put("hasEdited", myScenario.hasEdited);
+            Values.put("DelayTime", myScenario.delayedTime);
             return G.dbObject.insertOrThrow("T_Scenario", null, Values);
         }
 
-        public static long insert(String name, boolean active, String des, boolean opTimeBase, String months, String monthDays, String weekDays, String startHour, boolean opPreSwitchBase, boolean opPreGPS, boolean opPreSMS, String gPS_Params, boolean opPreWeather, String weatherTypes, boolean opPreTemperature, int minTemperature, int maxTemperature, String preSMSKeywords, boolean opResultSwitch, boolean opResultNotify, String notifyMobileIDs, String notifyText, boolean opResultSMS, String mobilenumbers, String sMStext, boolean isStarted, boolean opPreAND, boolean isStartedOnGPS, boolean hasEdited) {
+        public static long insert(String name, boolean active, String des, boolean opTimeBase, String months, String monthDays, String weekDays, String startHour, boolean opPreSwitchBase, boolean opPreGPS, boolean opPreSMS, String gPS_Params, boolean opPreWeather, String weatherTypes, boolean opPreTemperature, int minTemperature, int maxTemperature, String preSMSKeywords, boolean opResultSwitch, boolean opResultNotify, String notifyMobileIDs, String notifyText, boolean opResultSMS, String mobilenumbers, String sMStext, boolean isStarted, boolean opPreAND, boolean isStartedOnGPS, boolean hasEdited, int delayTime) {
             ContentValues Values = new ContentValues();
             Values.put("Name", name);
             Values.put("Active", active);
@@ -3558,6 +3608,7 @@ public class Database {
             Values.put("OpPreAND", opPreAND);
             Values.put("isStartedOnGPS", isStartedOnGPS);
             Values.put("hasEdited", hasEdited);
+            Values.put("DelayTime", delayTime);
             return G.dbObject.insert("T_Scenario", null, Values);
         }
 
@@ -3592,10 +3643,11 @@ public class Database {
             Values.put("OpPreAND", myScenario.opPreAND);
             Values.put("isStartedOnGPS", myScenario.isStartedOnGPS);
             Values.put("hasEdited", myScenario.hasEdited);
+            Values.put("DelayTime", myScenario.delayedTime);
             return G.dbObject.update("T_Scenario", Values, "ID=" + myScenario.iD, null);
         }
 
-        public static int edit(int iD, String name, boolean active, String des, boolean opTimeBase, String months, String monthDays, String weekDays, String startHour, boolean opPreSwitchBase, boolean opPreGPS, boolean opPreSMS, String gPS_Params, boolean opPreWeather, String weatherTypes, boolean opPreTemperature, int minTemperature, int maxTemperature, String preSMSKeywords, boolean opResultSwitch, boolean opResultNotify, String notifyMobileIDs, String notifyText, boolean opResultSMS, String mobilenumbers, String sMStext, boolean isStarted, boolean opPreAND, boolean isStartedOnGPS, boolean hasEdited) {
+        public static int edit(int iD, String name, boolean active, String des, boolean opTimeBase, String months, String monthDays, String weekDays, String startHour, boolean opPreSwitchBase, boolean opPreGPS, boolean opPreSMS, String gPS_Params, boolean opPreWeather, String weatherTypes, boolean opPreTemperature, int minTemperature, int maxTemperature, String preSMSKeywords, boolean opResultSwitch, boolean opResultNotify, String notifyMobileIDs, String notifyText, boolean opResultSMS, String mobilenumbers, String sMStext, boolean isStarted, boolean opPreAND, boolean isStartedOnGPS, boolean hasEdited, int delayTime) {
             ContentValues Values = new ContentValues();
             Values.put("Name", name);
             Values.put("Active", active);
@@ -3626,6 +3678,7 @@ public class Database {
             Values.put("OpPreAND", opPreAND);
             Values.put("isStartedOnGPS", isStartedOnGPS);
             Values.put("hasEdited", hasEdited);
+            Values.put("DelayTime", delayTime);
             return G.dbObject.update("T_Scenario", Values, "ID=" + iD, null);
         }
 
@@ -3672,6 +3725,7 @@ public class Database {
                 selectedRow.opPreAND = cursor.getInt(cursor.getColumnIndex("OpPreAND")) != 0;
                 selectedRow.isStartedOnGPS = cursor.getInt(cursor.getColumnIndex("isStartedOnGPS")) != 0;
                 selectedRow.hasEdited = cursor.getInt(cursor.getColumnIndex("hasEdited")) != 0;
+                selectedRow.delayedTime = cursor.getInt(cursor.getColumnIndex("DelayTime"));
             }
             try {
                 cursor.close();
@@ -3777,6 +3831,7 @@ public class Database {
                 selectedRow.opPreAND = cursor.getInt(cursor.getColumnIndex("OpPreAND")) != 0;
                 selectedRow.isStartedOnGPS = cursor.getInt(cursor.getColumnIndex("isStartedOnGPS")) != 0;
                 selectedRow.hasEdited = cursor.getInt(cursor.getColumnIndex("hasEdited")) != 0;
+                selectedRow.delayedTime = cursor.getInt(cursor.getColumnIndex("DelayTime"));
             }
             try {
                 cursor.close();

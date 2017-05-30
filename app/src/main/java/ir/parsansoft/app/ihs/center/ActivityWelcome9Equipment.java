@@ -23,6 +23,8 @@ import ir.parsansoft.app.ihs.center.adapters.AdapterListViewNode;
 import ir.parsansoft.app.ihs.center.adapters.AdapterSectionsExpandableList;
 import ir.parsansoft.app.ihs.center.adapters.AdapterSectionsExpandableList.onOptionButton;
 
+import static ir.parsansoft.app.ihs.center.G.sendCrashLog;
+
 public class ActivityWelcome9Equipment extends ActivityWizard {
 
     private AdapterSectionsExpandableList expListAdapter;
@@ -253,6 +255,8 @@ public class ActivityWelcome9Equipment extends ActivityWizard {
         }
         catch (Exception e) {
             G.printStackTrace(e);
+
+            sendCrashLog(e, "لود کردن تمام دستگاه های اتاق انتخاب شده", Thread.currentThread().getStackTrace()[2]);
         }
         grdListAdapter = null;
         if (nodes != null) {

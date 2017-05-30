@@ -68,14 +68,6 @@
                 android:paddingBottom="20dp"
                 android:paddingTop="20dp">
 
-                <ImageView
-                    android:id="@+id/btn_io_module"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:src="@drawable/lay_main_slidebar_icon_home"
-                    android:visibility="gone" />
-
                 <GridView
                     android:id="@+id/grdNodes"
                     android:layout_width="match_parent"

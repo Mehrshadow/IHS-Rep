@@ -85,7 +85,7 @@ public class ActivityAddNode_w4 extends ActivityEnhanced {
                     else
                         strSerial = G.T.getSentence(860) + "\n";
 
-                    Database.Switch.Struct[] currentswitch = Database.Switch.select("nodeID =" + node.iD);
+                    Database.Switch.Struct[] currentswitch = Database.Switch.select("nodeID =" + node.iD + " AND switchType not in (" + AllNodes.Switch_Type.CURTAIN_STATUS_Stop + ")");
                     for (int i = 0; i < currentswitch.length; i++) {
                         // choon tooye db baraye sensor port haye 13-16 save shode
                         // va mikhaim b karbar az 1-6 neshoon bedim
