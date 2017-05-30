@@ -12,6 +12,10 @@
         "source": "C:\\Users\\FCC\\.android\\build-cache\\550361ace40a162c3736de118df6487751699548\\output\\res\\color\\common_google_signin_btn_text_light.xml"
     },
     {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\common_google_signin_btn_text_dark.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\550361ace40a162c3736de118df6487751699548\\output\\res\\color\\common_google_signin_btn_text_dark.xml"
+    },
+    {
         "merged": "C:\\Users\\FCC\\Desktop\\IHS Rep\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_secondary_text_material_light.xml",
         "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_secondary_text_material_light.xml"
     },
@@ -20,12 +24,48 @@
         "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_search_url_text.xml"
     },
     {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\common_google_signin_btn_text_light.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\550361ace40a162c3736de118df6487751699548\\output\\res\\color\\common_google_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_primary_text_disable_only_material_light.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_secondary_text_material_light.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_secondary_text_material_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_search_url_text.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_search_url_text.xml"
+    },
+    {
         "merged": "C:\\Users\\FCC\\Desktop\\IHS Rep\\app\\build\\intermediates\\res\\merged\\debug\\color\\switch_thumb_material_dark.xml",
         "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\switch_thumb_material_dark.xml"
     },
     {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_primary_text_material_dark.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_primary_text_material_dark.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_primary_text_material_light.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_primary_text_material_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_secondary_text_material_dark.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_secondary_text_material_dark.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_primary_text_disable_only_material_dark.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_primary_text_disable_only_material_dark.xml"
+    },
+    {
         "merged": "C:\\Users\\FCC\\Desktop\\IHS Rep\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_primary_text_disable_only_material_light.xml",
         "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\switch_thumb_material_dark.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\switch_thumb_material_dark.xml"
     },
     {
         "merged": "C:\\Users\\FCC\\Desktop\\IHS Rep\\app\\build\\intermediates\\res\\merged\\debug\\color\\common_google_signin_btn_text_dark.xml",
@@ -42,5 +82,9 @@
     {
         "merged": "C:\\Users\\FCC\\Desktop\\IHS Rep\\app\\build\\intermediates\\res\\merged\\debug\\color\\abc_primary_text_material_light.xml",
         "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\abc_primary_text_material_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\FCC\\Desktop\\repe jadid\\iHSCenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\switch_thumb_material_light.xml",
+        "source": "C:\\Users\\FCC\\.android\\build-cache\\48c1395017649164fc5d761dc8a2d70f422e6449\\output\\res\\color\\switch_thumb_material_light.xml"
     }
 ]
